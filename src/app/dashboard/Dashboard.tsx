@@ -116,7 +116,7 @@ export default function Dashboard() {
               </button>
             </div>
 
-            <p className="mt-0.5 text-4xl font-bold tracking-tight text-[#ccff00]">
+            <p className="mt-0.5 text-4xl font-bold tracking-tight text-black">
               {!mounted ? "****" : balanceHidden ? (
                 "****"
               ) : (
@@ -130,19 +130,19 @@ export default function Dashboard() {
               className={cn(
                 "mt-1 flex items-center justify-center gap-2 text-xs font-semibold",
                 !mounted || balanceHidden
-                  ? "text-[#ccff00]/60"
+                  ? "text-black/60"
                   : hasAssets
                     ? "text-[#ccff00]"
-                    : "text-[#ccff00]/60"
+                    : "text-[#b91c1c]"
               )}
             >
               <span>{!mounted || balanceHidden ? "****" : (hasAssets ? "+$42.30" : "-$00.675")}</span>
-              <span className={cn("rounded-md px-1.5 py-0.5", !mounted || balanceHidden ? "bg-black/10" : hasAssets ? "bg-[#ccff00]/15" : "bg-white/10")}>
+              <span className={cn("rounded-md px-1.5 py-0.5", !mounted || balanceHidden ? "bg-black/10" : hasAssets ? "bg-[#ccff00]/15" : "bg-[#b91c1c]/15")}>
                 {!mounted || balanceHidden ? "***" : (hasAssets ? "+1.72%" : "-100%")}
               </span>
             </p>
 
-            <p className="mt-2 text-sm font-medium leading-snug text-[#ccff00]/80">
+            <p className="mt-2 text-sm font-medium leading-snug text-black/80">
               {hasAssets
                 ? "Your portfolio is growing today."
                 : <>Add your assets to start<br />using mom3</>}
