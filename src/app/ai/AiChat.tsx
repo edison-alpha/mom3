@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import * as React from "react";
 import { cn } from "@/lib/utils";
@@ -245,6 +246,12 @@ export default function AiChat() {
   const [input, setInput] = React.useState("");
   const [isThinking, setIsThinking] = React.useState(false);
 
+  const userTurns = React.useMemo(
+    () => messages.filter((message) => message.role === "user").length,
+    [messages]
+  );
+  const showRecommendations = userTurns >= 3;
+
   const sendMessage = React.useCallback(
     (value: string) => {
       const trimmed = value.trim();
@@ -275,7 +282,7 @@ export default function AiChat() {
         <header className="relative flex h-12 items-center justify-center">
           <Link
             href="/dashboard"
-            className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+            className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
             aria-label="Back to dashboard"
           >
             <Icon
@@ -289,15 +296,28 @@ export default function AiChat() {
           <h1 className="text-xl font-black text-white">mom3 /agent</h1>
         </header>
 
-        <section className="mt-5 space-y-3">
-          {recommendations.map((item) => (
-            <RecommendationCard
-              key={item.title}
-              item={item}
-              onSelect={() => sendMessage(item.title)}
-            />
-          ))}
-        </section>
+        {showRecommendations ? (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-5 space-y-3"
+          >
+            {recommendations.map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <RecommendationCard
+                  item={item}
+                  onSelect={() => sendMessage(item.title)}
+                />
+              </motion.div>
+            ))}
+          </motion.section>
+        ) : null}
 
         <section className="mt-6 flex flex-1 flex-col">
           <div className="flex-1 space-y-4 pb-4">

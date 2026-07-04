@@ -78,40 +78,40 @@ export default function ProfilePage() {
           <h1 className="text-base font-bold text-white">/Profile</h1>
         </header>
 
-        <section className="relative mt-5 overflow-hidden rounded-[32px] bg-[radial-gradient(circle_at_50%_0%,rgba(59,51,189,0.55),rgba(28,28,30,0.98)_56%,rgba(17,18,24,1)_100%)] p-5 text-center shadow-[0_18px_52px_-28px_rgba(59,51,189,0.9)]">
+        <section className="relative mt-5 overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_50%_0%,rgba(59,51,189,0.55),rgba(28,28,30,0.98)_56%,rgba(17,18,24,1)_100%)] p-4 text-center shadow-[0_18px_52px_-28px_rgba(59,51,189,0.9)]">
           <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-[#ccff00]/10 blur-[54px]" />
           <div className="pointer-events-none absolute -left-12 bottom-4 h-40 w-40 rounded-full bg-[#3B33BD]/35 blur-[54px]" />
 
           <div className="relative z-10">
-            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#3B33BD] via-[#5A52D4] to-[#7E78EA] shadow-[0_18px_44px_-18px_rgba(59,51,189,0.9)] ring-4 ring-black/25">
-              <span className="text-3xl font-black text-white">U</span>
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#3B33BD] via-[#5A52D4] to-[#7E78EA] shadow-[0_14px_34px_-14px_rgba(59,51,189,0.9)] ring-4 ring-black/25">
+              <span className="text-2xl font-black text-white">U</span>
             </div>
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <h2 className="text-2xl font-black tracking-tight text-white">
+            <div className="mt-3 flex items-center justify-center gap-1.5">
+              <h2 className="text-xl font-black tracking-tight text-white">
                 @ubayy
               </h2>
               <Icon
                 icon="material-symbols:verified-rounded"
                 aria-hidden="true"
-                width={23}
-                height={23}
+                width={20}
+                height={20}
                 className="text-[#ccff00]"
               />
             </div>
-            <p className="mt-2 text-sm font-medium text-[#B8B8C5]">
+            <p className="mt-1 text-xs font-medium text-[#B8B8C5]">
               Universal wallet profile on mom3
             </p>
 
-            <div className="mt-5 grid grid-cols-3 gap-2">
+            <div className="mt-4 grid grid-cols-3 gap-1.5">
               {stats.map((item) => (
-                <div key={item.label} className="rounded-2xl bg-black/25 p-3">
-                  <p className="text-[11px] font-bold uppercase text-[#8E8E98]">
+                <div key={item.label} className="rounded-xl bg-black/25 p-2">
+                  <p className="text-[10px] font-bold uppercase text-[#8E8E98]">
                     {item.label}
                   </p>
-                  <p className="mt-1 text-lg font-black text-white">
+                  <p className="mt-0.5 text-base font-black text-white">
                     {item.value}
                   </p>
-                  <p className="mt-0.5 text-[11px] font-semibold text-[#ccff00]">
+                  <p className="mt-0.5 text-[10px] font-semibold text-[#ccff00]">
                     {item.sub}
                   </p>
                 </div>

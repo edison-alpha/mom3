@@ -5,13 +5,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { FloatingMenuButton } from "@/components/ui/menu-button";
+import { cn } from "@/lib/utils";
 import {
   ArrowDown,
+  ArrowUp,
   ChevronDown,
   ChevronRight,
   Coins,
   Eye,
   EyeOff,
+  RefreshCw,
   Sprout,
 } from "lucide-react";
 
@@ -40,6 +43,7 @@ function AvatarStack({ label }: { label: string }) {
 
 export default function Dashboard() {
   const [balanceHidden, setBalanceHidden] = useState(false);
+  const hasAssets = true;
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
@@ -111,29 +115,68 @@ export default function Dashboard() {
                 "****"
               ) : (
                 <>
-                  <span className="align-top text-xl">$</span>00.00
+                  <span className="align-top text-xl">$</span>{hasAssets ? "2,500.00" : "00.00"}
                 </>
               )}
             </p>
 
-            <p className="mt-1 flex items-center justify-center gap-2 text-xs font-semibold text-[#FF453A]">
-              <span>{balanceHidden ? "****" : "-$00.675"}</span>
-              <span className="rounded-md bg-[#FF453A]/15 px-1.5 py-0.5">-100%</span>
+            <p
+              className={cn(
+                "mt-1 flex items-center justify-center gap-2 text-xs font-semibold",
+                hasAssets ? "text-[#34C759]" : "text-[#FF453A]"
+              )}
+            >
+              <span>{balanceHidden ? "****" : (hasAssets ? "+$42.30" : "-$00.675")}</span>
+              <span className={cn("rounded-md px-1.5 py-0.5", hasAssets ? "bg-[#34C759]/15" : "bg-[#FF453A]/15")}>
+                {hasAssets ? "+1.72%" : "-100%"}
+              </span>
             </p>
 
             <p className="mt-2 text-sm font-medium leading-snug text-white/85">
-              Add your assets to start
-              <br />
-              using mom3
+              {hasAssets
+                ? "Your portfolio is growing today."
+                : <>Add your assets to start<br />using mom3</>}
             </p>
 
-            <button
-              type="button"
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#D4FF00] px-7 py-3 text-base font-black text-[#3B33BD] shadow-[0_8px_24px_-8px_rgba(212,255,0,0.45)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60"
-            >
-              <ArrowDown className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
-              Deposit
-            </button>
+            {hasAssets ? (
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                <Link
+                  href="#"
+                  className="flex flex-col items-center justify-center gap-2 rounded-[18px] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#241CFF] text-[#ccff00]">
+                    <ArrowDown className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
+                  </span>
+                  <span className="text-xs font-semibold text-white">Deposit</span>
+                </Link>
+                <Link
+                  href="/convert"
+                  className="flex flex-col items-center justify-center gap-2 rounded-[18px] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#242426] text-white">
+                    <RefreshCw className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="text-xs font-semibold text-white">Convert</span>
+                </Link>
+                <Link
+                  href="/send"
+                  className="flex flex-col items-center justify-center gap-2 rounded-[18px] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#242426] text-white">
+                    <ArrowUp className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
+                  </span>
+                  <span className="text-xs font-semibold text-white">Send</span>
+                </Link>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#D4FF00] px-7 py-3 text-base font-black text-[#3B33BD] shadow-[0_8px_24px_-8px_rgba(212,255,0,0.45)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60"
+              >
+                <ArrowDown className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
+                Deposit
+              </button>
+            )}
           </div>
         </section>
 

@@ -177,7 +177,7 @@ export default function ExplorePage() {
           <Link
             href="/dashboard"
             aria-label="Back to dashboard"
-            className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+            className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
           >
             <Icon
               icon="lucide:chevron-left"

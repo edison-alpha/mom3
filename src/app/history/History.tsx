@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import * as React from "react";
 import { FloatingMenuButton } from "@/components/ui/menu-button";
@@ -63,68 +64,93 @@ export default function History() {
             </span>
           </div>
 
-          {activeItems.length > 0 ? (
-            <div className="mt-4 overflow-hidden rounded-[28px] bg-[#1C1C1E]">
-              {activeItems.map((item, index) => (
-                <Link
-                  key={item.id}
-                  href={`/history/${item.id}`}
-                  className={cn(
-                    "flex min-h-[78px] items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
-                    index < activeItems.length - 1 && "border-b border-white/5"
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
-                      toneClassName[item.tone]
-                    )}
-                  >
-                    <Icon
-                      icon={item.icon}
-                      aria-hidden="true"
-                      width={22}
-                      height={22}
-                    />
-                  </span>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+            >
+              {activeItems.length > 0 ? (
+                <div className="mt-4 overflow-hidden rounded-[28px] bg-[#1C1C1E]">
+                  {activeItems.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <Link
+                        href={`/history/${item.id}`}
+                        className={cn(
+                          "flex min-h-[78px] items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
+                          index < activeItems.length - 1 && "border-b border-white/5"
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
+                            toneClassName[item.tone]
+                          )}
+                        >
+                          <Icon
+                            icon={item.icon}
+                            aria-hidden="true"
+                            width={22}
+                            height={22}
+                          />
+                        </span>
 
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-base font-bold text-white">
-                      {item.title}
-                    </span>
-                    <span className="mt-0.5 block truncate text-sm font-medium text-[#9A9AA2]">
-                      {item.description}
-                    </span>
-                  </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-base font-bold text-white">
+                            {item.title}
+                          </span>
+                          <span className="mt-0.5 block truncate text-sm font-medium text-[#9A9AA2]">
+                            {item.description}
+                          </span>
+                        </span>
 
-                  <span className="shrink-0 text-right">
-                    <span className="block text-sm font-bold text-white">
-                      {item.amount}
-                    </span>
-                    <span className="mt-0.5 block text-xs font-semibold text-[#77777f]">
-                      {item.time}
-                    </span>
-                  </span>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-4 flex min-h-48 flex-col items-center justify-center rounded-[28px] bg-[#1C1C1E] px-6 text-center">
-              <Icon
-                icon="material-symbols:history-2"
-                aria-hidden="true"
-                width={36}
-                height={36}
-                className="text-[#9A9AA2]"
-              />
-              <p className="mt-3 text-base font-bold text-white">
-                No history yet
-              </p>
-              <p className="mt-1 text-sm font-medium text-[#9A9AA2]">
-                New activity will appear here.
-              </p>
-            </div>
-          )}
+                        <span className="flex shrink-0 items-center gap-2 text-right">
+                          <span>
+                            <span className="block text-sm font-bold text-white">
+                              {item.amount}
+                            </span>
+                            <span className="mt-0.5 block text-xs font-semibold text-[#77777f]">
+                              {item.time}
+                            </span>
+                          </span>
+                          <Icon
+                            icon="lucide:chevron-right"
+                            aria-hidden="true"
+                            width={18}
+                            height={18}
+                            className="text-[#66666D]"
+                          />
+                        </span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-4 flex min-h-48 flex-col items-center justify-center rounded-[28px] bg-[#1C1C1E] px-6 text-center">
+                  <Icon
+                    icon="material-symbols:history-2"
+                    aria-hidden="true"
+                    width={36}
+                    height={36}
+                    className="text-[#9A9AA2]"
+                  />
+                  <p className="mt-3 text-base font-bold text-white">
+                    No history yet
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-[#9A9AA2]">
+                    New activity will appear here.
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </section>
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import * as React from "react";
 
@@ -274,6 +275,12 @@ function DetailPanel({ position }: { position: Position }) {
   );
 }
 
+const tabVariants = {
+  enter: { opacity: 0, y: 12 },
+  center: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+};
+
 export default function AssetsClient() {
   const [activeTab, setActiveTab] = React.useState<Tab>("assets");
   const [selectedPosition, setSelectedPosition] = React.useState(positions[0]);
@@ -288,19 +295,8 @@ export default function AssetsClient() {
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
-        <header className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#3B33BD] via-[#5A52D4] to-[#7E78EA]" />
-            <p className="text-sm font-bold leading-none">@ubayy</p>
-          </div>
-
-          <Link
-            href="/history"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
-            aria-label="Open history"
-          >
-            <Icon icon="ic:twotone-wallet" className="h-6 w-6" aria-hidden="true" />
-          </Link>
+        <header className="relative flex h-12 items-center justify-center">
+          <h1 className="text-base font-bold text-white">My Assets</h1>
         </header>
 
         <section className="mt-10 text-center">
@@ -350,120 +346,158 @@ export default function AssetsClient() {
           ))}
         </div>
 
-        {activeTab === "assets" ? (
-          <section className="mt-4 overflow-hidden rounded-[24px] bg-[#1F1F21]">
-            {assets.map((asset) => (
-              <Link
-                key={asset.symbol}
-                href="#"
-                className="flex min-h-[76px] items-center gap-3 border-b border-white/[0.06] px-4 py-3 last:border-b-0 transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
-                  <Icon icon={asset.icon} className="h-7 w-7" aria-hidden="true" />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-base font-black text-white">
-                    {asset.name}
-                  </span>
-                  <span className="mt-1 block text-sm font-semibold text-[#8F8F96]">
-                    {asset.amount} on {asset.chain}
-                  </span>
-                </span>
-                <span className="text-right">
-                  <span className="block text-base font-black text-white">{asset.value}</span>
-                  <span className="mt-1 block text-xs font-bold text-[#ccff00]">
-                    {asset.symbol}
-                  </span>
-                </span>
-              </Link>
-            ))}
-          </section>
-        ) : null}
-
-        {activeTab === "positions" ? (
-          <section className="mt-4 space-y-4">
-            <div className="overflow-hidden rounded-[24px] bg-[#1F1F21]">
-              {positions.map((position) => (
-                <button
-                  key={`${position.asset}-${position.protocol}-${position.kind}`}
-                  type="button"
-                  onClick={() => setSelectedPosition(position)}
-                  className={cn(
-                    "flex min-h-[80px] w-full items-center gap-3 border-b border-white/[0.06] px-4 py-3 text-left last:border-b-0 transition-colors focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
-                    selectedPosition === position ? "bg-white/[0.06]" : "hover:bg-white/[0.04]",
-                  )}
+        <AnimatePresence mode="wait">
+          {activeTab === "assets" ? (
+            <motion.section
+              key="assets"
+              variants={tabVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25 }}
+              className="mt-4 overflow-hidden rounded-[24px] bg-[#1F1F21]"
+            >
+              {assets.map((asset, index) => (
+                <motion.div
+                  key={asset.symbol}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
                 >
-                  <PositionIcon position={position} />
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-2">
-                      <span className="truncate text-base font-black text-white">
-                        {position.asset}
+                  <Link
+                    href="#"
+                    className="flex min-h-[76px] items-center gap-3 border-b border-white/[0.06] px-4 py-3 last:border-b-0 transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+                  >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
+                      <Icon icon={asset.icon} className="h-7 w-7" aria-hidden="true" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-base font-bold text-white">
+                        {asset.name}
                       </span>
-                      <span
-                        className={cn(
-                          "rounded-full border px-2 py-0.5 text-[10px] font-black",
-                          kindClassName[position.kind],
-                        )}
-                      >
-                        {position.kind}
+                      <span className="mt-1 block text-sm font-medium text-[#8E8E93]">
+                        {asset.amount} on {asset.chain}
                       </span>
                     </span>
-                    <span className="mt-1 block truncate text-sm font-semibold text-[#8F8F96]">
-                      {position.protocol}
+                    <span className="text-right">
+                      <span className="block text-sm font-bold text-white">{asset.value}</span>
+                      <span className="mt-1 block text-xs font-black text-[#ccff00]">
+                        {asset.symbol}
+                      </span>
                     </span>
-                  </span>
-                  <span className="shrink-0 text-right">
-                    <span className="block text-base font-black text-white">
-                      {position.balance}
-                    </span>
-                    <span className={cn("mt-1 block text-xs font-bold", riskClassName[position.risk])}>
-                      {position.risk} risk
-                    </span>
-                  </span>
-                </button>
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.section>
+          ) : null}
 
-            <DetailPanel position={selectedPosition} />
-          </section>
-        ) : null}
-
-        {activeTab === "summary" ? (
-          <section className="mt-4 space-y-4">
-            <div className="rounded-[24px] border border-white/10 bg-[#111217] p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#A7A7B7]">Portfolio Health</p>
-                  <p className="mt-1 text-3xl font-black text-[#ccff00]">86</p>
-                </div>
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ccff00]/10 text-[#ccff00]">
-                  <Icon icon="solar:shield-check-bold" className="h-8 w-8" aria-hidden="true" />
-                </span>
+          {activeTab === "positions" ? (
+            <motion.section
+              key="positions"
+              variants={tabVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25 }}
+              className="mt-4 space-y-4"
+            >
+              <div className="overflow-hidden rounded-[24px] bg-[#1F1F21]">
+                {positions.map((position, index) => (
+                  <motion.div
+                    key={`${position.asset}-${position.protocol}-${position.kind}`}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPosition(position)}
+                      className={cn(
+                        "flex min-h-[80px] w-full items-center gap-3 border-b border-white/[0.06] px-4 py-3 text-left last:border-b-0 transition-colors focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
+                        selectedPosition === position ? "bg-white/[0.06]" : "hover:bg-white/[0.04]",
+                      )}
+                    >
+                      <PositionIcon position={position} />
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-center gap-2">
+                          <span className="truncate text-base font-black text-white">
+                            {position.asset}
+                          </span>
+                          <span
+                            className={cn(
+                              "rounded-full border px-2 py-0.5 text-[10px] font-black",
+                              kindClassName[position.kind],
+                            )}
+                          >
+                            {position.kind}
+                          </span>
+                        </span>
+                        <span className="mt-1 block truncate text-sm font-semibold text-[#8F8F96]">
+                          {position.protocol}
+                        </span>
+                      </span>
+                      <span className="shrink-0 text-right">
+                        <span className="block text-base font-black text-white">
+                          {position.balance}
+                        </span>
+                        <span className={cn("mt-1 block text-xs font-bold", riskClassName[position.risk])}>
+                          {position.risk} risk
+                        </span>
+                      </span>
+                    </button>
+                  </motion.div>
+                ))}
               </div>
-              <p className="mt-4 text-sm font-medium leading-relaxed text-[#A7A7B7]">
-                Portfolio is healthy with stablecoin-heavy exposure. AI suggests reducing
-                experimental yield and moving part of it into Aave or Morpho lending.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                ["Net APY", "5.92%", "After fees"],
-                ["Risk Level", "Low", "Stable weighted"],
-                ["Borrow Usage", "28%", "Safe range"],
-                ["Rebalance", "7 days", "Auto check"],
-              ].map(([label, value, helper]) => (
-                <div key={label} className="rounded-[20px] border border-white/10 bg-[#111217] p-3">
-                  <p className="text-xs font-medium text-[#A7A7B7]">{label}</p>
-                  <p className="mt-2 text-xl font-black text-white">{value}</p>
-                  <p className="mt-1 text-xs font-semibold text-[#8F8F96]">{helper}</p>
+              <DetailPanel position={selectedPosition} />
+            </motion.section>
+          ) : null}
+
+          {activeTab === "summary" ? (
+            <motion.section
+              key="summary"
+              variants={tabVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.25 }}
+              className="mt-4 space-y-4"
+            >
+              <div className="rounded-[24px] border border-white/10 bg-[#111217] p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-[#A7A7B7]">Portfolio Health</p>
+                    <p className="mt-1 text-3xl font-black text-[#ccff00]">86</p>
+                  </div>
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ccff00]/10 text-[#ccff00]">
+                    <Icon icon="solar:shield-check-bold" className="h-8 w-8" aria-hidden="true" />
+                  </span>
                 </div>
-              ))}
-            </div>
+                <p className="mt-4 text-sm font-medium leading-relaxed text-[#A7A7B7]">
+                  Portfolio is healthy with stablecoin-heavy exposure. AI suggests reducing
+                  experimental yield and moving part of it into Aave or Morpho lending.
+                </p>
+              </div>
 
-            <DetailPanel position={selectedPosition} />
-          </section>
-        ) : null}
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  ["Net APY", "5.92%", "After fees"],
+                  ["Risk Level", "Low", "Stable weighted"],
+                  ["Borrow Usage", "28%", "Safe range"],
+                  ["Rebalance", "7 days", "Auto check"],
+                ].map(([label, value, helper]) => (
+                  <div key={label} className="rounded-[20px] border border-white/10 bg-[#111217] p-3">
+                    <p className="text-xs font-medium text-[#A7A7B7]">{label}</p>
+                    <p className="mt-2 text-xl font-black text-white">{value}</p>
+                    <p className="mt-1 text-xs font-semibold text-[#8F8F96]">{helper}</p>
+                  </div>
+                ))}
+              </div>
+
+              <DetailPanel position={selectedPosition} />
+            </motion.section>
+          ) : null}
+        </AnimatePresence>
 
         <Link
           href={cta.href}
