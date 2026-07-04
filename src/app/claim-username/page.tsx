@@ -42,7 +42,7 @@ export default function ClaimUsernamePage() {
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pt-4 pb-8 sm:max-w-md">
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pt-4 pb-28 sm:max-w-md">
         <div className="sticky top-0 z-10 -mx-5 bg-black/90 px-5 backdrop-blur-lg">
           <div className="flex items-center justify-between py-1">
             <motion.button

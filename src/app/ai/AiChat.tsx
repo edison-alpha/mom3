@@ -271,7 +271,7 @@ export default function AiChat() {
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-4 pt-4 sm:max-w-md">
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
         <header className="relative flex h-12 items-center justify-center">
           <Link
             href="/dashboard"

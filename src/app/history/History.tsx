@@ -20,17 +20,8 @@ export default function History() {
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
       <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
-        <header className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-[#9A9AA2]">Activity</p>
-            <h1 className="mt-1 text-xl font-bold tracking-tight text-white">
-              History
-            </h1>
-          </div>
-          <div
-            aria-hidden="true"
-            className="h-11 w-11 rounded-full bg-gradient-to-br from-[#3B33BD] via-[#5A52D4] to-[#7E78EA]"
-          />
+        <header className="relative flex h-12 items-center justify-center">
+          <h1 className="text-base font-bold text-white">History</h1>
         </header>
 
         <section className="mt-5 rounded-[28px] bg-[#1C1C1E] p-2">

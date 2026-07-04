@@ -60,7 +60,7 @@ const actionRows = [
 export default function ProfilePage() {
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-10 pt-4 sm:max-w-md">
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
         <header className="relative flex h-12 items-center justify-center">
           <Link
             href="/dashboard"
@@ -140,27 +140,11 @@ export default function ProfilePage() {
         </section>
 
         <section className="mt-4 rounded-[28px] bg-[#1C1C1E] p-4">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-base font-bold text-white">Receive link</h3>
-              <p className="mt-1 text-sm font-medium text-[#9A9AA2]">
-                Share your QR or send directly by mom3 tag.
-              </p>
-            </div>
-            <div className="grid h-20 w-20 shrink-0 grid-cols-5 gap-1 rounded-2xl bg-white p-2">
-              {Array.from({ length: 25 }).map((_, index) => (
-                <span
-                  key={index}
-                  className={`rounded-[2px] ${
-                    [
-                      0, 1, 2, 5, 7, 10, 11, 12, 18, 20, 21, 22, 24,
-                    ].includes(index)
-                      ? "bg-black"
-                      : "bg-transparent"
-                  }`}
-                />
-              ))}
-            </div>
+          <div>
+            <h3 className="text-base font-bold text-white">Receive link</h3>
+            <p className="mt-1 text-sm font-medium text-[#9A9AA2]">
+              Send directly by mom3 tag.
+            </p>
           </div>
 
           <div className="mt-4 flex gap-2">

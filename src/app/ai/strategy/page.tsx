@@ -89,7 +89,7 @@ export const metadata = {
 export default function AiStrategyPage() {
   return (
     <main className="min-h-screen bg-black text-white">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-4 pb-6 pt-4 sm:max-w-md">
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
         <header className="relative flex h-12 items-center justify-center">
           <Link
             href="/ai"

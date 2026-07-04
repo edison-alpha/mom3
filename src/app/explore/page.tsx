@@ -1,19 +1,8 @@
+"use client";
+
 import { Icon } from "@iconify/react";
-import type { Metadata, Viewport } from "next";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Explore Lending | Oni",
-  description: "Explore lending and borrowing opportunities on mom3.",
-};
-
-export const viewport: Viewport = {
-  themeColor: "#000000",
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-};
+import * as React from "react";
 
 type MarketItem = {
   asset: string;
@@ -101,6 +90,16 @@ const riskWatch: MarketItem[] = [
   },
 ];
 
+function matchesMarket(item: MarketItem, query: string) {
+  const normalized = query.toLowerCase();
+  return (
+    item.asset.toLowerCase().includes(normalized) ||
+    item.protocol.toLowerCase().includes(normalized) ||
+    item.primary.toLowerCase().includes(normalized) ||
+    item.secondary.toLowerCase().includes(normalized)
+  );
+}
+
 function MarketList({
   title,
   items,
@@ -154,6 +153,23 @@ function MarketList({
 }
 
 export default function ExplorePage() {
+  const [query, setQuery] = React.useState("");
+
+  const filteredLending = React.useMemo(
+    () => (query.trim() ? lendingPools.filter((item) => matchesMarket(item, query)) : lendingPools),
+    [query]
+  );
+  const filteredBorrow = React.useMemo(
+    () => (query.trim() ? borrowMarkets.filter((item) => matchesMarket(item, query)) : borrowMarkets),
+    [query]
+  );
+  const filteredRisk = React.useMemo(
+    () => (query.trim() ? riskWatch.filter((item) => matchesMarket(item, query)) : riskWatch),
+    [query]
+  );
+
+  const hasResults = filteredLending.length > 0 || filteredBorrow.length > 0 || filteredRisk.length > 0;
+
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
       <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
@@ -212,12 +228,33 @@ export default function ExplorePage() {
           </div>
         </section>
 
-        <MarketList title="Best lend rates" items={lendingPools} />
-        <MarketList title="Borrow markets" items={borrowMarkets} />
-        <MarketList title="Risk watch" items={riskWatch} />
+        {hasResults ? (
+          <>
+            {filteredLending.length > 0 ? <MarketList title="Best lend rates" items={filteredLending} /> : null}
+            {filteredBorrow.length > 0 ? <MarketList title="Borrow markets" items={filteredBorrow} /> : null}
+            {filteredRisk.length > 0 ? <MarketList title="Risk watch" items={filteredRisk} /> : null}
+          </>
+        ) : (
+          <div className="mt-8 flex flex-col items-center justify-center rounded-[28px] bg-[#151714] px-6 py-12 text-center">
+            <Icon
+              icon="icon-park-outline:search"
+              aria-hidden="true"
+              width={40}
+              height={40}
+              className="text-[#9A9AA2]"
+            />
+            <p className="mt-4 text-base font-bold text-white">No markets found</p>
+            <p className="mt-1 text-sm font-medium text-[#9A9AA2]">
+              Try searching by asset, protocol, rate, or risk.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="fixed inset-x-0 bottom-5 z-40 flex justify-center px-5">
+        <label htmlFor="explore-search" className="sr-only">
+          Search lending markets
+        </label>
         <div className="flex h-14 w-full max-w-md items-center gap-3 rounded-full bg-[#1C1C1E]/90 px-5 shadow-[0_16px_34px_-18px_rgba(0,0,0,0.95)] backdrop-blur-md">
           <Icon
             icon="icon-park-outline:search"
@@ -226,9 +263,15 @@ export default function ExplorePage() {
             height={24}
             className="text-[#85858d]"
           />
-          <span className="text-base font-bold text-[#9A9AA2]">
-            Search lending markets
-          </span>
+          <input
+            id="explore-search"
+            type="search"
+            autoComplete="off"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search lending markets"
+            className="min-w-0 flex-1 bg-transparent text-base font-bold text-white placeholder:text-[#9A9AA2] focus:outline-none"
+          />
         </div>
       </div>
     </main>

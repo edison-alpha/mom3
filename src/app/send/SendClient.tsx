@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import * as React from "react";
+import { historyItems } from "@/lib/history";
 import { cn } from "@/lib/utils";
 
 type Recipient = {
@@ -21,7 +22,7 @@ type SendAsset = {
   symbol: string;
   name: string;
   balance: string;
-  color: string;
+  icon: string;
 };
 
 const sendAssets: SendAsset[] = [
@@ -29,23 +30,53 @@ const sendAssets: SendAsset[] = [
     symbol: "USDC",
     name: "USD Coin",
     balance: "0.00",
-    color: "bg-[#2775CA]",
+    icon: "cryptocurrency-color:usdc",
   },
   {
     symbol: "ETH",
     name: "Ethereum",
     balance: "0.0000",
-    color: "bg-[#627EEA]",
+    icon: "cryptocurrency-color:eth",
+  },
+  {
+    symbol: "USDT",
+    name: "Tether USD",
+    balance: "0.00",
+    icon: "cryptocurrency-color:usdt",
   },
   {
     symbol: "MOM",
     name: "mom3 Coin",
     balance: "0.00",
-    color: "bg-[#ccff00]",
+    icon: "solar:stars-bold",
   },
 ];
 
-const recipients: Recipient[] = [
+const toneToGradient: Record<string, string> = {
+  green: "from-[#ccff00] to-[#3B33BD]",
+  purple: "from-[#3B33BD] to-[#7E78EA]",
+  blue: "from-[#2d2eff] to-[#5EA2FF]",
+};
+
+const recentRecipients = historyItems.me
+  .filter((item) => item.title.toLowerCase().includes("sent to") || item.title.includes("@"))
+  .map((item, index) => {
+    const handleMatch = item.title.match(/@(\w+)/);
+    const handle = handleMatch ? `@${handleMatch[1]}` : item.title;
+    const name = handle.replace("@", "");
+    return {
+      id: `recent-${item.id}`,
+      handle,
+      name: name.charAt(0).toUpperCase() + name.slice(1),
+      address: item.reference.startsWith("0x") ? item.reference : `0x${item.id.replace(/-/g, "").slice(0, 6)}...`,
+      network: item.network,
+      status: "Recent" as const,
+      color: toneToGradient[item.tone] ?? "from-[#3B33BD] to-[#7E78EA]",
+    };
+  })
+  .reverse();
+
+const addressBook: Recipient[] = [
   {
     id: "1",
     handle: "@ubayy",
@@ -81,33 +112,6 @@ const recipients: Recipient[] = [
     network: "Base",
     status: "Recent",
     color: "from-[#2d2eff] to-[#5EA2FF]",
-  },
-  {
-    id: "5",
-    handle: "@dimas",
-    name: "Dimas Arkan",
-    address: "0x29e7...C531",
-    network: "Ethereum",
-    status: "Friend",
-    color: "from-[#627EEA] to-[#8DA2FF]",
-  },
-  {
-    id: "6",
-    handle: "@marsha",
-    name: "Marsha",
-    address: "0x68a2...b0d9",
-    network: "Base",
-    status: "Verified",
-    color: "from-[#14F195] to-[#3B33BD]",
-  },
-  {
-    id: "7",
-    handle: "@kevin",
-    name: "Kevin",
-    address: "0x9441...ee72",
-    network: "Arbitrum",
-    status: "Recent",
-    color: "from-[#28A0F0] to-[#3B33BD]",
   },
 ];
 
@@ -187,26 +191,41 @@ function RecipientRow({
 export default function SendClient() {
   const searchParams = useSearchParams();
   const initialTo = searchParams.get("to") ?? "";
-  const initialRecipient =
-    recipients.find((recipient) => matchesRecipient(recipient, initialTo)) ??
-    null;
 
   const [query, setQuery] = React.useState(initialTo);
-  const [selectedRecipient, setSelectedRecipient] =
-    React.useState<Recipient | null>(initialRecipient);
-  const [selectedAsset, setSelectedAsset] = React.useState<SendAsset | null>(
-    null
-  );
+  const [selectedRecipient, setSelectedRecipient] = React.useState<Recipient | null>(null);
+  const [selectedAsset, setSelectedAsset] = React.useState<SendAsset | null>(null);
   const [amount, setAmount] = React.useState("");
   const [scanOpen, setScanOpen] = React.useState(false);
   const [sent, setSent] = React.useState(false);
 
-  const filteredRecipients = React.useMemo(() => {
-    if (!query.trim()) return recipients;
+  React.useEffect(() => {
+    if (initialTo) {
+      const matched =
+        addressBook.find((recipient) => matchesRecipient(recipient, initialTo)) ??
+        recentRecipients.find((recipient) => matchesRecipient(recipient, initialTo));
 
-    const filtered = recipients.filter((recipient) =>
-      matchesRecipient(recipient, query)
+      if (matched) {
+        setSelectedRecipient(matched);
+      } else if (initialTo.startsWith("0x") && initialTo.length >= 8) {
+        setSelectedRecipient({
+          ...scannedRecipient,
+          id: "typed-address",
+          handle: "Wallet address",
+          name: "External wallet",
+          address: initialTo,
+        });
+      }
+    }
+  }, [initialTo]);
+
+  const filteredRecipients = React.useMemo(() => {
+    if (!query.trim()) return recentRecipients;
+
+    const combined = [...recentRecipients, ...addressBook].filter(
+      (recipient, index, self) => index === self.findIndex((r) => r.handle === recipient.handle)
     );
+    const filtered = combined.filter((recipient) => matchesRecipient(recipient, query));
 
     if (filtered.length > 0) return filtered;
 
@@ -239,13 +258,16 @@ export default function SendClient() {
     setSelectedAsset(null);
     setAmount("");
     setSent(false);
+    setQuery("");
   };
 
   const canSend = Boolean(selectedRecipient && selectedAsset && amount.trim());
 
+  const showRecentLabel = !query.trim() && recentRecipients.length > 0;
+
   return (
     <main className="min-h-screen bg-black text-white">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-10 pt-4 sm:max-w-md">
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
         <header className="relative flex h-12 items-center justify-center">
           {selectedRecipient ? (
             <button
@@ -309,11 +331,14 @@ export default function SendClient() {
               </p>
             </div>
 
-            <div className="mt-5">
-              <h3 className="text-sm font-black uppercase text-[#77777f]">
-                Choose asset
-              </h3>
-              <div className="mt-2 grid grid-cols-3 gap-2">
+            <div className="mt-5 rounded-[28px] bg-[#1C1C1E] p-4">
+              <label
+                htmlFor="send-asset"
+                className="block text-xs font-black uppercase text-[#77777f]"
+              >
+                Asset
+              </label>
+              <div className="mt-2 grid grid-cols-4 gap-2">
                 {sendAssets.map((asset) => {
                   const isSelected = selectedAsset?.symbol === asset.symbol;
 
@@ -326,27 +351,22 @@ export default function SendClient() {
                         setSent(false);
                       }}
                       className={cn(
-                        "rounded-[22px] border border-white/10 bg-[#1C1C1E] p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
+                        "flex flex-col items-center gap-1.5 rounded-[18px] border border-white/10 bg-black/25 p-2.5 transition-colors focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
                         isSelected && "border-[#3B33BD] bg-[#3B33BD]/15"
                       )}
                     >
-                      <span className={cn("block h-8 w-8 rounded-full", asset.color)} />
-                      <span className="mt-3 block text-sm font-black text-white">
-                        {asset.symbol}
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.08]">
+                        <Icon icon={asset.icon} aria-hidden="true" width={20} height={20} />
                       </span>
-                      <span className="mt-0.5 block text-xs font-medium text-[#9A9AA2]">
-                        Bal {asset.balance}
-                      </span>
+                      <span className="text-xs font-black text-white">{asset.symbol}</span>
                     </button>
                   );
                 })}
               </div>
-            </div>
 
-            <div className="mt-5 rounded-[28px] bg-[#1C1C1E] p-4">
               <label
                 htmlFor="send-amount"
-                className="block text-xs font-black uppercase text-[#77777f]"
+                className="mt-5 block text-xs font-black uppercase text-[#77777f]"
               >
                 Amount
               </label>
@@ -367,6 +387,11 @@ export default function SendClient() {
                   {selectedAsset?.symbol ?? "ASSET"}
                 </span>
               </div>
+              {selectedAsset ? (
+                <p className="mt-2 text-right text-xs font-semibold text-[#9A9AA2]">
+                  Balance: {selectedAsset.balance} {selectedAsset.symbol}
+                </p>
+              ) : null}
 
               <button
                 type="button"
@@ -375,7 +400,7 @@ export default function SendClient() {
                 className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#3B33BD] text-base font-black text-[#ccff00] shadow-[0_10px_28px_-10px_rgba(59,51,189,0.8)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD] disabled:cursor-not-allowed disabled:bg-[#2A2A3E] disabled:text-[#77777f]"
               >
                 <Icon icon="lucide:send" aria-hidden="true" width={20} height={20} />
-                Preview simulation
+                Preview
               </button>
 
               {sent ? (
@@ -409,7 +434,7 @@ export default function SendClient() {
                   setQuery(event.target.value);
                   setSent(false);
                 }}
-                placeholder="search @ tag or address"
+                placeholder="Search @ tag or address"
                 className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-[#8E8E93] focus:outline-none"
               />
               <button
@@ -424,7 +449,9 @@ export default function SendClient() {
 
             <section className="mt-5 flex-1">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-bold text-white">Recipients</h2>
+                <h2 className="text-base font-bold text-white">
+                  {showRecentLabel ? "Recent" : "Recipients"}
+                </h2>
                 <span className="rounded-full bg-[#1C1C1E] px-3 py-1 text-xs font-bold text-[#9A9AA2]">
                   {filteredRecipients.length}
                 </span>
