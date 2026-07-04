@@ -82,12 +82,12 @@ const defaultFloatingMenuItems: FloatingMenuItem[] = [
   {
     icon: "material-symbols:history-2",
     label: "History",
-    href: "#history",
+    href: "/history",
   },
   {
     icon: "icon-park-outline:search",
     label: "Search",
-    href: "#search",
+    href: "/explore",
   },
 ];
 
@@ -97,7 +97,7 @@ const FloatingMenuButton = React.forwardRef<HTMLElement, FloatingMenuButtonProps
       className,
       items = defaultFloatingMenuItems,
       activeHref,
-      profileHref,
+      profileHref = "/profile",
       profileLabel = "Profile",
       onProfileClick,
       ...props
@@ -105,7 +105,7 @@ const FloatingMenuButton = React.forwardRef<HTMLElement, FloatingMenuButtonProps
     ref
   ) => {
     const profileClassName =
-      "flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#3B33BD] via-[#5A52D4] to-[#7E78EA] shadow-[0_8px_24px_-8px_rgba(59,51,189,0.65)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
+      "flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#173531]/95 via-[#112a28]/95 to-[#071a18]/95 shadow-[0_12px_28px_-12px_rgba(0,0,0,0.9)] ring-1 ring-white/15 backdrop-blur-md transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
     return (
       <nav
@@ -118,13 +118,13 @@ const FloatingMenuButton = React.forwardRef<HTMLElement, FloatingMenuButtonProps
         )}
         {...props}
       >
-        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-[#1C1C1E]/90 p-1.5 shadow-[0_16px_44px_-18px_rgba(0,0,0,0.85)] backdrop-blur-xl">
-          <div className="flex h-14 items-center gap-1 rounded-full bg-black/25 px-1">
+        <div className="flex w-full max-w-md items-center justify-between gap-4">
+          <div className="flex h-14 items-center gap-1 rounded-full bg-[#1C1C1E]/85 px-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_12px_28px_-12px_rgba(0,0,0,0.9)] ring-1 ring-white/15 backdrop-blur-md">
             {items.map((item) => {
               const isActive = item.active ?? item.href === activeHref;
               const itemClassName = cn(
-                "flex h-12 w-12 items-center justify-center rounded-full text-[#9A9AA2] transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#ccff00]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-                isActive && "bg-white text-[#3B33BD] hover:bg-white hover:text-[#3B33BD]"
+                "flex h-11 w-11 items-center justify-center rounded-full text-[#85858d] transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#3B33BD]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+                isActive && "text-[#3B33BD] hover:text-[#3B33BD]"
               );
               const icon = (
                 <Icon

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
+import { FloatingMenuButton } from "@/components/ui/menu-button";
 import {
   ArrowDown,
   ChevronDown,
@@ -11,11 +12,7 @@ import {
   Coins,
   Eye,
   EyeOff,
-  PieChart,
-  Sparkles,
   Sprout,
-  Wallet,
-  Wrench,
 } from "lucide-react";
 
 function AvatarStack({ label }: { label: string }) {
@@ -46,7 +43,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pt-4 pb-8 sm:max-w-md">
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pt-4 pb-28 sm:max-w-md">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#3B33BD] via-[#5A52D4] to-[#7E78EA]" />
@@ -69,7 +66,12 @@ export default function Dashboard() {
             className="inline-flex h-10 items-center gap-2 rounded-full bg-[#1C1C1E] px-3 text-xs font-bold text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
             aria-label="Select wallet currency"
           >
-            <Wallet className="h-5 w-5" aria-hidden="true" />
+            <Icon
+              icon="ic:twotone-wallet"
+              aria-hidden="true"
+              width={20}
+              height={20}
+            />
             USD
             <ChevronDown className="h-3.5 w-3.5 text-[#9A9AA2]" aria-hidden="true" />
           </button>
@@ -192,7 +194,7 @@ export default function Dashboard() {
             </Link>
 
             <Link
-              href="#"
+              href="/ai"
               className="flex items-center gap-3 rounded-[24px] border border-white/10 bg-[linear-gradient(115deg,#17181d_0%,#111216_100%)] p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
             >
               <span className="min-w-0 flex-1">
@@ -215,21 +217,9 @@ export default function Dashboard() {
             </Link>
           </div>
         </section>
-
         <div className="flex-1" />
-
-        <nav className="mt-6 flex items-center justify-between">
-          <div className="h-14 w-44 rounded-full bg-[#1C1C1E]" />
-
-          <button
-            type="button"
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3B33BD] text-white shadow-[0_8px_24px_-8px_rgba(59,51,189,0.55)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
-            aria-label="Tools"
-          >
-            <Wrench className="h-6 w-6" aria-hidden="true" />
-          </button>
-        </nav>
       </div>
+      <FloatingMenuButton activeHref="/dashboard" />
     </main>
   );
 }
