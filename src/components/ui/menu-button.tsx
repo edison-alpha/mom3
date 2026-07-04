@@ -113,7 +113,7 @@ const FloatingMenuButton = React.forwardRef<HTMLElement, FloatingMenuButtonProps
         aria-label="Primary"
         data-slot="floating-menu-button"
         className={cn(
-          "fixed inset-x-0 bottom-6 z-50 flex justify-center px-5 sm:bottom-16",
+          "fixed inset-x-0 bottom-14 z-50 flex justify-center px-5 sm:bottom-24",
           className
         )}
         {...props}
