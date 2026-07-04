@@ -149,9 +149,9 @@ export default function ChooseHandle({
           </div>
           <div className="flex-1">
             <p className="text-sm font-bold text-white">@{handleValue || 'yourhandle'}</p>
-            <p className="text-xs text-[#6b6680]">This is how others will see you<br />on mom3.</p>
+            <p className="text-xs text-[#9A9AA2]">This is how others will see you<br />on mom3.</p>
           </div>
-          <ChevronRight className="w-5 h-5 text-[#6b6680] shrink-0" aria-hidden="true" />
+          <ChevronRight className="w-5 h-5 text-[#9A9AA2] shrink-0" aria-hidden="true" />
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export default function ChooseHandle({
         className={`mt-auto w-full py-4 rounded-2xl text-lg font-bold transition-all mb-2 ${
           isValid
             ? 'bg-[#ccff00] text-[#0a0a0a] shadow-[0_0_20px_rgba(204,255,0,0.3)]'
-            : 'bg-[#2a2a3e] text-[#6b6680] cursor-not-allowed'
+            : 'bg-[#2A2A3E] text-[#9A9AA2] cursor-not-allowed'
         }`}
       >
         Continue

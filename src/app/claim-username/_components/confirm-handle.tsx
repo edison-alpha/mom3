@@ -122,7 +122,7 @@ export default function ConfirmHandle({
       <motion.button
         whileTap={{ scale: 0.97 }}
         onClick={onBack}
-        className="w-full py-3 text-[#6b6680] text-sm font-semibold mb-2"
+        className="w-full py-3 text-[#9A9AA2] text-sm font-semibold mb-2"
       >
         Cancel
       </motion.button>
