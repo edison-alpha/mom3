@@ -310,9 +310,47 @@ export default function AssetsClient() {
           <p className="text-4xl font-bold tracking-tight text-white">
             <span className="align-top text-xl">$</span>2,500.00
           </p>
-          <p className="mx-auto mt-2 max-w-44 text-sm font-medium leading-tight text-[#8F8F96]">
-            Portfolio health 86 / 100
-          </p>
+          <div className="relative mx-auto mt-4 flex h-28 w-56 items-end justify-center">
+            <svg viewBox="0 0 200 110" className="h-28 w-56">
+              <defs>
+                <linearGradient id="gauge-red" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#FF4444" />
+                  <stop offset="100%" stopColor="#FF6B35" />
+                </linearGradient>
+                <linearGradient id="gauge-yellow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#FFB020" />
+                  <stop offset="100%" stopColor="#FFD166" />
+                </linearGradient>
+                <linearGradient id="gauge-green" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#86EF5C" />
+                  <stop offset="100%" stopColor="#ccff00" />
+                </linearGradient>
+              </defs>
+
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#1C1C1E" strokeWidth="14" strokeLinecap="round" />
+
+              <path d="M 20 100 A 80 80 0 0 1 75.3 23.9" fill="none" stroke="url(#gauge-red)" strokeWidth="14" strokeLinecap="round" />
+
+              <path d="M 75.3 23.9 A 80 80 0 0 1 147 35.3" fill="none" stroke="url(#gauge-yellow)" strokeWidth="14" strokeLinecap="round" />
+
+              <path d="M 147 35.3 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gauge-green)" strokeWidth="14" strokeLinecap="round" />
+
+              <line
+                x1="100"
+                y1="100"
+                x2={100 + 65 * Math.cos(((180 - 86 * 1.8) * Math.PI) / 180)}
+                y2={100 - 65 * Math.sin(((180 - 86 * 1.8) * Math.PI) / 180)}
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <circle cx="100" cy="100" r="5" fill="white" />
+            </svg>
+            <div className="absolute bottom-1 flex flex-col items-center">
+              <span className="text-xl font-black tracking-tight text-white">86</span>
+              <span className="text-[11px] font-semibold text-[#8F8F96]">/ 100 health</span>
+            </div>
+          </div>
         </section>
 
         <section className="mt-5 grid grid-cols-3 gap-4">

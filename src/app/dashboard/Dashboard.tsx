@@ -100,7 +100,7 @@ export default function Dashboard() {
           <div className="pointer-events-none absolute -left-16 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-[#3B33BD]/15 blur-[52px]" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-center gap-2 text-sm font-semibold text-[#ccff00]/75">
+            <div className="flex items-center justify-center gap-2 text-sm font-semibold text-white/75">
               <span>Total Balance</span>
               <button
                 type="button"
@@ -142,7 +142,7 @@ export default function Dashboard() {
               </span>
             </p>
 
-            <p className="mt-2 text-sm font-medium leading-snug text-black/80">
+            <p className="mt-2 text-sm font-medium leading-snug text-white/80">
               {hasAssets
                 ? "Your portfolio is growing today."
                 : <>Add your assets to start<br />using mom3</>}

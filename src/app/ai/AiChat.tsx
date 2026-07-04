@@ -278,23 +278,24 @@ export default function AiChat() {
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-32 pt-4 sm:max-w-md">
-        <header className="relative flex h-12 items-center justify-center">
-          <Link
-            href="/dashboard"
-            className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
-            aria-label="Back to dashboard"
-          >
-            <Icon
-              icon="lucide:chevron-left"
-              aria-hidden="true"
-              width={28}
-              height={28}
-            />
-          </Link>
+      <header className="fixed inset-x-0 top-0 z-50 mx-auto flex h-14 w-full max-w-md items-center justify-center bg-black/80 px-5 backdrop-blur-md">
+        <Link
+          href="/dashboard"
+          className="absolute left-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+          aria-label="Back to dashboard"
+        >
+          <Icon
+            icon="lucide:chevron-left"
+            aria-hidden="true"
+            width={28}
+            height={28}
+          />
+        </Link>
 
-          <h1 className="text-xl font-bold text-white">mom3 /agent</h1>
-        </header>
+        <h1 className="text-xl font-bold text-white">mom3 /agent</h1>
+      </header>
+
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-32 pt-20 sm:max-w-md">
 
         {showRecommendations ? (
           <motion.section
