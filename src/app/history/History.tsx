@@ -48,7 +48,7 @@ export default function History() {
                   className={cn(
                     "h-11 rounded-full text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:ring-[#ccff00]/60",
                     isActive
-                      ? "bg-[#2d2eff] text-white"
+                      ? "bg-[#3B33BD] text-[#ccff00]"
                       : "text-[#9A9AA2] hover:bg-white/5 hover:text-white"
                   )}
                 >
