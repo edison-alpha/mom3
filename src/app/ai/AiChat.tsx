@@ -278,7 +278,7 @@ export default function AiChat() {
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
-      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
+      <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-32 pt-4 sm:max-w-md">
         <header className="relative flex h-12 items-center justify-center">
           <Link
             href="/dashboard"
@@ -293,7 +293,7 @@ export default function AiChat() {
             />
           </Link>
 
-          <h1 className="text-xl font-black text-white">mom3 /agent</h1>
+          <h1 className="text-xl font-bold text-white">mom3 /agent</h1>
         </header>
 
         {showRecommendations ? (
@@ -319,133 +319,133 @@ export default function AiChat() {
           </motion.section>
         ) : null}
 
-        <section className="mt-6 flex flex-1 flex-col">
-          <div className="flex-1 space-y-4 pb-4">
-            {messages.length === 0 && !isThinking ? (
-              <div className="rounded-[24px] border border-white/10 bg-[#1C1C1E] p-4 text-center">
-                <Icon
-                  icon="solar:chat-round-like-bold"
-                  aria-hidden="true"
-                  width={32}
-                  height={32}
-                  className="mx-auto text-[#3B33BD]"
-                />
-                <p className="mt-3 text-sm font-bold text-white">
-                  Start with a strategy question
-                </p>
-                <p className="mt-1 text-xs font-medium leading-relaxed text-[#9A9AA2]">
-                  Ask mom3 agent for safest yield, risk review, or a rebalance
-                  suggestion.
-                </p>
-              </div>
-            ) : null}
+        <section className="mt-6 space-y-4 pb-4">
+          {messages.length === 0 && !isThinking ? (
+            <div className="rounded-[24px] border border-white/10 bg-[#1C1C1E] p-4 text-center">
+              <Icon
+                icon="solar:chat-round-like-bold"
+                aria-hidden="true"
+                width={32}
+                height={32}
+                className="mx-auto text-[#3B33BD]"
+              />
+              <p className="mt-3 text-sm font-bold text-white">
+                Start with a strategy question
+              </p>
+              <p className="mt-1 text-xs font-medium leading-relaxed text-[#9A9AA2]">
+                Ask mom3 agent for safest yield, risk review, or a rebalance
+                suggestion.
+              </p>
+            </div>
+          ) : null}
 
-            {messages.map((message) => {
-              const isUser = message.role === "user";
+          {messages.map((message) => {
+            const isUser = message.role === "user";
 
-              if (message.kind === "strategy") {
-                return (
-                  <div key={message.id} className="flex gap-3">
-                    <span className="mt-7 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#2d2eff] text-white shadow-[0_0_0_4px_rgba(204,255,0,0.1)]">
-                      <Icon icon="solar:smile-circle-bold" aria-hidden="true" width={24} height={24} />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <StrategyResponse />
-                    </div>
-                  </div>
-                );
-              }
-
+            if (message.kind === "strategy") {
               return (
-                <div
-                  key={message.id}
-                  className={cn("flex", isUser ? "justify-end" : "justify-start")}
-                >
-                  <p
-                    className={cn(
-                      "max-w-[82%] rounded-[22px] px-4 py-3 text-sm font-medium leading-relaxed",
-                      isUser
-                        ? "rounded-br-md bg-[#1C1C1E] text-white"
-                        : "rounded-bl-md bg-[#111428] text-white"
-                    )}
-                  >
-                    {message.content}
-                    {isUser && (
-                      <span className="mt-2 flex items-center justify-end gap-1 text-xs text-[#9A9AA2]">
-                        10:30 AM
-                        <Icon
-                          icon="solar:check-read-bold"
-                          aria-hidden="true"
-                          width={16}
-                          height={16}
-                          className="text-[#3B33BD]"
-                        />
-                      </span>
-                    )}
-                  </p>
+                <div key={message.id} className="flex gap-3">
+                  <span className="mt-7 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#2d2eff] text-white shadow-[0_0_0_4px_rgba(204,255,0,0.1)]">
+                    <Icon icon="solar:smile-circle-bold" aria-hidden="true" width={24} height={24} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <StrategyResponse />
+                  </div>
                 </div>
               );
-            })}
+            }
 
-            {isThinking && (
-              <div className="flex gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#2d2eff] text-white">
-                  <Icon icon="solar:smile-circle-bold" aria-hidden="true" width={24} height={24} />
-                </span>
-                <div className="rounded-[22px] rounded-bl-md bg-[#1C1C1E] px-4 py-3 text-sm font-bold text-[#9A9AA2]">
-                  Thinking...
-                </div>
+            return (
+              <div
+                key={message.id}
+                className={cn("flex", isUser ? "justify-end" : "justify-start")}
+              >
+                <p
+                  className={cn(
+                    "max-w-[82%] rounded-[22px] px-4 py-3 text-sm font-medium leading-relaxed",
+                    isUser
+                      ? "rounded-br-md bg-[#1C1C1E] text-white"
+                      : "rounded-bl-md bg-[#111428] text-white"
+                  )}
+                >
+                  {message.content}
+                  {isUser && (
+                    <span className="mt-2 flex items-center justify-end gap-1 text-xs text-[#9A9AA2]">
+                      10:30 AM
+                      <Icon
+                        icon="solar:check-read-bold"
+                        aria-hidden="true"
+                        width={16}
+                        height={16}
+                        className="text-[#3B33BD]"
+                      />
+                    </span>
+                  )}
+                </p>
               </div>
-            )}
-          </div>
+            );
+          })}
 
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              sendMessage(input);
-            }}
-            className="flex h-16 items-center gap-2 rounded-full border border-white/10 bg-[#1C1C1E] p-2 shadow-[0_16px_44px_-24px_rgba(0,0,0,0.9)]"
-          >
-            <button
-              type="button"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[#8E8E98] transition-colors hover:bg-white/5 hover:text-white focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
-              aria-label="Attach file"
-            >
-              <Icon
-                icon="lucide:paperclip"
-                aria-hidden="true"
-                width={22}
-                height={22}
-              />
-            </button>
-            <label htmlFor="ai-message" className="sr-only">
-              Message mom3 agent
-            </label>
-            <input
-              id="ai-message"
-              type="text"
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              placeholder="Ask mom3 anything..."
-              autoComplete="off"
-              className="min-w-0 flex-1 bg-transparent text-base font-medium text-white placeholder:text-[#77777f] focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isThinking}
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#3B33BD] text-[#ccff00] shadow-[0_10px_28px_-12px_rgba(59,51,189,0.9)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60 disabled:cursor-not-allowed disabled:bg-[#2A2A3E] disabled:text-[#77777f]"
-              aria-label="Send message"
-            >
-              <Icon
-                icon="lucide:arrow-up"
-                aria-hidden="true"
-                width={22}
-                height={22}
-                strokeWidth={3}
-              />
-            </button>
-          </form>
+          {isThinking && (
+            <div className="flex gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#2d2eff] text-white">
+                <Icon icon="solar:smile-circle-bold" aria-hidden="true" width={24} height={24} />
+              </span>
+              <div className="rounded-[22px] rounded-bl-md bg-[#1C1C1E] px-4 py-3 text-sm font-bold text-[#9A9AA2]">
+                Thinking...
+              </div>
+            </div>
+          )}
         </section>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-7 z-40 flex justify-center px-5">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            sendMessage(input);
+          }}
+          className="flex h-14 w-full max-w-md items-center gap-2 rounded-full border border-white/10 bg-[#1C1C1E]/95 p-2 shadow-[0_16px_44px_-24px_rgba(0,0,0,0.9)] backdrop-blur-md"
+        >
+          <button
+            type="button"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[#8E8E98] transition-colors hover:bg-white/5 hover:text-white focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+            aria-label="Attach file"
+          >
+            <Icon
+              icon="lucide:paperclip"
+              aria-hidden="true"
+              width={22}
+              height={22}
+            />
+          </button>
+          <label htmlFor="ai-message" className="sr-only">
+            Message mom3 agent
+          </label>
+          <input
+            id="ai-message"
+            type="text"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            placeholder="Ask mom3 anything..."
+            autoComplete="off"
+            className="min-w-0 flex-1 bg-transparent text-base font-medium text-white placeholder:text-[#77777f] focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={!input.trim() || isThinking}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#3B33BD] text-[#ccff00] shadow-[0_10px_28px_-12px_rgba(59,51,189,0.9)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60 disabled:cursor-not-allowed disabled:bg-[#2A2A3E] disabled:text-[#77777f]"
+            aria-label="Send message"
+          >
+            <Icon
+              icon="lucide:arrow-up"
+              aria-hidden="true"
+              width={20}
+              height={20}
+              strokeWidth={3}
+            />
+          </button>
+        </form>
       </div>
     </main>
   );

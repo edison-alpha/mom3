@@ -53,7 +53,7 @@ export default function ClaimUsernamePage() {
             >
               <ChevronLeft className="w-6 h-6 text-white" aria-hidden="true" />
             </motion.button>
-            <h1 className="text-base font-semibold text-white">Claim Username</h1>
+            <h1 className="text-xl font-bold text-white">Claim Username</h1>
             <motion.button
               whileTap={{ scale: 0.9 }}
               className="w-10 h-10 flex items-center justify-center -mr-2 rounded-full transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60"

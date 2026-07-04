@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import * as React from "react";
 
@@ -108,14 +109,25 @@ function MarketList({
   items: MarketItem[];
 }) {
   return (
-    <section className="mt-6">
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="mt-6"
+    >
       <h2 className="flex items-center gap-1 text-base font-semibold text-white">
         {title}
         <Icon icon="lucide:chevron-right" aria-hidden="true" width={17} height={17} />
       </h2>
       <div className="mt-3 overflow-hidden rounded-[28px] bg-[#151714] p-3">
-        {items.map((item) => (
-          <div key={`${title}-${item.asset}`} className="flex min-h-[68px] items-center gap-3">
+        {items.map((item, index) => (
+          <motion.div
+            key={`${title}-${item.asset}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className="flex min-h-[68px] items-center gap-3"
+          >
             <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${item.color}`}>
               <Icon
                 icon={item.icon}
@@ -145,10 +157,10 @@ function MarketList({
                 {item.secondary}
               </span>
             </span>
-          </div>
+          </motion.div>
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -186,10 +198,15 @@ export default function ExplorePage() {
               height={28}
             />
           </Link>
-          <h1 className="text-base font-bold text-white">Explore</h1>
+          <h1 className="text-xl font-bold text-white">Explore</h1>
         </header>
 
-        <section className="mt-4 overflow-hidden">
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mt-4 overflow-hidden"
+        >
           <div className="flex gap-3 overflow-x-auto pb-3">
             {[
               {
@@ -202,9 +219,12 @@ export default function ExplorePage() {
                 subtitle: "Collateralized credit from 2.14% APR",
                 icon: "solar:hand-money-bold",
               },
-            ].map((item) => (
-              <article
+            ].map((item, index) => (
+              <motion.article
                 key={item.title}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
                 className="min-w-[82%] rounded-[24px] bg-[#151714] p-4"
               >
                 <div className="flex items-start justify-between">
@@ -219,14 +239,14 @@ export default function ExplorePage() {
                 <p className="mt-2 text-sm font-medium text-[#8E8E93]">
                   {item.subtitle}
                 </p>
-              </article>
+              </motion.article>
             ))}
           </div>
           <div className="flex justify-center gap-2">
             <span className="h-2 w-5 rounded-full bg-[#ccff00]" />
             <span className="h-2 w-2 rounded-full bg-[#242620]" />
           </div>
-        </section>
+        </motion.section>
 
         {hasResults ? (
           <>
@@ -235,7 +255,12 @@ export default function ExplorePage() {
             {filteredRisk.length > 0 ? <MarketList title="Risk watch" items={filteredRisk} /> : null}
           </>
         ) : (
-          <div className="mt-8 flex flex-col items-center justify-center rounded-[28px] bg-[#151714] px-6 py-12 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.25 }}
+            className="mt-8 flex flex-col items-center justify-center rounded-[28px] bg-[#151714] px-6 py-12 text-center"
+          >
             <Icon
               icon="icon-park-outline:search"
               aria-hidden="true"
@@ -247,11 +272,11 @@ export default function ExplorePage() {
             <p className="mt-1 text-sm font-medium text-[#9A9AA2]">
               Try searching by asset, protocol, rate, or risk.
             </p>
-          </div>
+          </motion.div>
         )}
       </div>
 
-      <div className="fixed inset-x-0 bottom-5 z-40 flex justify-center px-5">
+      <div className="fixed inset-x-0 bottom-7 z-40 flex justify-center px-5">
         <label htmlFor="explore-search" className="sr-only">
           Search lending markets
         </label>

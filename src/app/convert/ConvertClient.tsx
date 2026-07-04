@@ -213,7 +213,7 @@ export default function ConvertClient() {
             <Icon icon="lucide:chevron-left" aria-hidden="true" width={28} height={28} />
           </Link>
 
-          <h1 className="text-base font-bold text-white">/Convert</h1>
+          <h1 className="text-xl font-bold text-white">/Convert</h1>
         </header>
 
         <section className="relative mt-5 flex flex-col gap-3">

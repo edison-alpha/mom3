@@ -124,7 +124,7 @@ const FloatingMenuButton = React.forwardRef<HTMLElement, FloatingMenuButtonProps
               const isActive = item.active ?? item.href === activeHref;
               const itemClassName = cn(
                 "flex h-11 w-11 items-center justify-center rounded-full text-[#85858d] transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#3B33BD]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-                isActive && "text-[#3B33BD] hover:text-[#3B33BD]"
+                isActive && "bg-[#ccff00] text-black hover:bg-[#ccff00] hover:text-black"
               );
               const icon = (
                 <Icon

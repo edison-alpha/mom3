@@ -298,7 +298,7 @@ export default function SendClient() {
             </Link>
           )}
 
-          <h1 className="text-base font-bold text-white">/Send</h1>
+          <h1 className="text-xl font-bold text-white">/Send</h1>
         </header>
 
         {selectedRecipient ? (

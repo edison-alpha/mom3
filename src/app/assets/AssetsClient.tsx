@@ -296,11 +296,18 @@ export default function AssetsClient() {
     <main className="min-h-screen bg-black text-white">
       <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
         <header className="relative flex h-12 items-center justify-center">
-          <h1 className="text-base font-bold text-white">My Assets</h1>
+          <Link
+            href="/dashboard"
+            aria-label="Back to dashboard"
+            className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+          >
+            <Icon icon="lucide:chevron-left" aria-hidden="true" width={24} height={24} />
+          </Link>
+          <h1 className="text-xl font-bold text-white">My Assets</h1>
         </header>
 
         <section className="mt-10 text-center">
-          <p className="text-[44px] font-black leading-none tracking-normal text-white">
+          <p className="text-4xl font-bold tracking-tight text-white">
             <span className="align-top text-xl">$</span>2,500.00
           </p>
           <p className="mx-auto mt-2 max-w-44 text-sm font-medium leading-tight text-[#8F8F96]">

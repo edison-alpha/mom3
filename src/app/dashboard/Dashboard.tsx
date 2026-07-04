@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
@@ -43,7 +43,13 @@ function AvatarStack({ label }: { label: string }) {
 
 export default function Dashboard() {
   const [balanceHidden, setBalanceHidden] = useState(false);
-  const hasAssets = true;
+  const [hasAssets, setHasAssets] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setHasAssets(localStorage.getItem("mom3-demo-balance") === "1");
+    setMounted(true);
+  }, []);
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
@@ -81,25 +87,25 @@ export default function Dashboard() {
           </button>
         </header>
 
-        <section className="relative mt-5 overflow-hidden rounded-[28px] bg-[#3B33BD] p-5 text-center shadow-[0_12px_40px_-12px_rgba(59,51,189,0.45)]">
+        <section className="relative mt-5 overflow-hidden rounded-[28px] bg-[#D4FF00] p-5 text-center shadow-[0_12px_40px_-12px_rgba(212,255,0,0.35)]">
           <Image
             src="/shadow.png"
             alt=""
             fill
             sizes="(max-width: 640px) 100vw, 448px"
-            className="pointer-events-none absolute inset-0 z-0 object-cover opacity-100"
+            className="pointer-events-none absolute inset-0 z-0 object-cover opacity-30"
             aria-hidden="true"
           />
-          <div className="pointer-events-none absolute -right-8 -top-12 h-44 w-44 rounded-full bg-[#7C73FF]/25 blur-[56px]" />
-          <div className="pointer-events-none absolute -left-16 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-[#5149FF]/25 blur-[52px]" />
+          <div className="pointer-events-none absolute -right-8 -top-12 h-44 w-44 rounded-full bg-white/25 blur-[56px]" />
+          <div className="pointer-events-none absolute -left-16 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-[#3B33BD]/15 blur-[52px]" />
 
           <div className="relative z-10">
-            <div className="flex items-center justify-center gap-2 text-sm font-semibold text-white/75">
+            <div className="flex items-center justify-center gap-2 text-sm font-semibold text-black/75">
               <span>Total Balance</span>
               <button
                 type="button"
                 onClick={() => setBalanceHidden((value) => !value)}
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-black/80 transition-colors hover:bg-black/10 focus-visible:ring-2 focus-visible:ring-[#3B33BD]/30"
                 aria-label={balanceHidden ? "Show balance" : "Hide balance"}
               >
                 {balanceHidden ? (
@@ -110,8 +116,8 @@ export default function Dashboard() {
               </button>
             </div>
 
-            <p className="mt-0.5 text-4xl font-bold tracking-tight text-white">
-              {balanceHidden ? (
+            <p className="mt-0.5 text-4xl font-bold tracking-tight text-black">
+              {!mounted ? "****" : balanceHidden ? (
                 "****"
               ) : (
                 <>
@@ -123,16 +129,20 @@ export default function Dashboard() {
             <p
               className={cn(
                 "mt-1 flex items-center justify-center gap-2 text-xs font-semibold",
-                hasAssets ? "text-[#34C759]" : "text-[#FF453A]"
+                !mounted || balanceHidden
+                  ? "text-black/60"
+                  : hasAssets
+                    ? "text-[#15803d]"
+                    : "text-[#b91c1c]"
               )}
             >
-              <span>{balanceHidden ? "****" : (hasAssets ? "+$42.30" : "-$00.675")}</span>
-              <span className={cn("rounded-md px-1.5 py-0.5", hasAssets ? "bg-[#34C759]/15" : "bg-[#FF453A]/15")}>
-                {hasAssets ? "+1.72%" : "-100%"}
+              <span>{!mounted || balanceHidden ? "****" : (hasAssets ? "+$42.30" : "-$00.675")}</span>
+              <span className={cn("rounded-md px-1.5 py-0.5", !mounted || balanceHidden ? "bg-black/10" : hasAssets ? "bg-[#15803d]/15" : "bg-[#b91c1c]/15")}>
+                {!mounted || balanceHidden ? "***" : (hasAssets ? "+1.72%" : "-100%")}
               </span>
             </p>
 
-            <p className="mt-2 text-sm font-medium leading-snug text-white/85">
+            <p className="mt-2 text-sm font-medium leading-snug text-black/80">
               {hasAssets
                 ? "Your portfolio is growing today."
                 : <>Add your assets to start<br />using mom3</>}
@@ -144,7 +154,7 @@ export default function Dashboard() {
                   href="#"
                   className="flex flex-col items-center justify-center gap-2 rounded-[18px] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#241CFF] text-[#ccff00]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3B33BD] text-[#ccff00]">
                     <ArrowDown className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
                   </span>
                   <span className="text-xs font-semibold text-white">Deposit</span>
@@ -171,7 +181,7 @@ export default function Dashboard() {
             ) : (
               <button
                 type="button"
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#D4FF00] px-7 py-3 text-base font-black text-[#3B33BD] shadow-[0_8px_24px_-8px_rgba(212,255,0,0.45)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/60"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#3B33BD] px-7 py-3 text-base font-black text-[#ccff00] shadow-[0_8px_24px_-8px_rgba(59,51,189,0.45)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD]/70"
               >
                 <ArrowDown className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
                 Deposit

@@ -22,7 +22,7 @@ export default function History() {
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
       <div className="mx-auto flex min-h-screen w-full flex-col px-5 pb-28 pt-4 sm:max-w-md">
         <header className="relative flex h-12 items-center justify-center">
-          <h1 className="text-base font-bold text-white">History</h1>
+          <h1 className="text-xl font-bold text-white">History</h1>
         </header>
 
         <section className="mt-5 rounded-[28px] bg-[#1C1C1E] p-2">

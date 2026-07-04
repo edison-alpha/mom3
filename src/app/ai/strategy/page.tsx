@@ -98,7 +98,7 @@ export default function AiStrategyPage() {
           >
             <Icon icon="lucide:arrow-left" className="h-5 w-5" aria-hidden="true" />
           </Link>
-          <h1 className="text-lg font-black text-white">AI Rebalancing</h1>
+          <h1 className="text-xl font-bold text-white">AI Rebalancing</h1>
         </header>
 
         <section className="relative mt-5 overflow-hidden rounded-[24px] border border-[#4F46E5] bg-[radial-gradient(circle_at_86%_20%,rgba(59,51,255,0.46),rgba(13,14,51,0.96)_42%,rgba(4,5,17,0.98)_100%)] p-4">
