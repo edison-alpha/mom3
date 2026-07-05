@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import * as React from "react";
 
+import { MiniChart, TimeRangeControl, type TimeRange } from "@/components/ui/mini-chart";
+import { cn } from "@/lib/utils";
+
 type MarketItem = {
   asset: string;
   protocol: string;
@@ -13,6 +16,33 @@ type MarketItem = {
   icon: string;
   color: string;
   positive?: boolean;
+  category: "Lend" | "Borrow" | "Risk";
+  tvl: string;
+  utilization: string;
+  risk: "Low" | "Medium" | "High";
+  description: string;
+  chartData: Record<TimeRange, number[]>;
+};
+
+const marketChartSeries: Record<string, Record<TimeRange, number[]>> = {
+  stable: {
+    "1D": [0, 0.05, 0.08, 0.12, 0.1, 0.16, 0.18],
+    "1W": [0, 0.2, 0.5, 0.42, 0.72, 0.84, 1.02],
+    "1M": [0, 0.8, 1.4, 2.1, 2.8, 3.2, 3.9],
+    "1Y": [0, 4, 7.8, 10.4, 13.2, 15.6, 19.8],
+  },
+  volatile: {
+    "1D": [0, -0.2, 0.5, -0.1, 0.9, 0.4, 1.3],
+    "1W": [0, 1.6, -0.9, 2.8, 2.1, 4.2, 3.4],
+    "1M": [0, 3.4, 1.2, 6.8, 4.4, 8.6, 7.2],
+    "1Y": [0, 12, -4, 18, 34, 26, 48],
+  },
+  warning: {
+    "1D": [0, -0.6, -0.2, -1.2, -0.8, -1.5, -1.1],
+    "1W": [0, -1.8, -0.6, -3.6, -2.4, -4.8, -4.1],
+    "1M": [0, -4.2, -1.6, -7.8, -5.8, -10.2, -8.4],
+    "1Y": [0, 6, -8, 3, -15, -4, -21],
+  },
 };
 
 const lendingPools: MarketItem[] = [
@@ -24,6 +54,12 @@ const lendingPools: MarketItem[] = [
     icon: "cryptocurrency-color:usdc",
     color: "bg-[#2775CA]",
     positive: true,
+    category: "Lend",
+    tvl: "$184.2M",
+    utilization: "68%",
+    risk: "Low",
+    description: "Stable USDC lending market with deep liquidity and predictable yield.",
+    chartData: marketChartSeries.stable,
   },
   {
     asset: "ETH",
@@ -33,6 +69,12 @@ const lendingPools: MarketItem[] = [
     icon: "cryptocurrency-color:eth",
     color: "bg-[#627EEA]",
     positive: true,
+    category: "Lend",
+    tvl: "$96.4M",
+    utilization: "54%",
+    risk: "Low",
+    description: "Blue-chip ETH lending market with lower APY and broad protocol support.",
+    chartData: marketChartSeries.volatile,
   },
   {
     asset: "USDT",
@@ -42,6 +84,12 @@ const lendingPools: MarketItem[] = [
     icon: "cryptocurrency-color:usdt",
     color: "bg-[#26A17B]",
     positive: true,
+    category: "Lend",
+    tvl: "$72.8M",
+    utilization: "61%",
+    risk: "Low",
+    description: "Conservative stablecoin lending route with steady utilization.",
+    chartData: marketChartSeries.stable,
   },
 ];
 
@@ -53,6 +101,12 @@ const borrowMarkets: MarketItem[] = [
     secondary: "80% LTV",
     icon: "cryptocurrency-color:usdc",
     color: "bg-[#2775CA]",
+    category: "Borrow",
+    tvl: "$42.1M",
+    utilization: "80%",
+    risk: "Medium",
+    description: "Borrow USDC against supported collateral. Watch utilization before entering.",
+    chartData: marketChartSeries.volatile,
   },
   {
     asset: "cbETH",
@@ -61,6 +115,12 @@ const borrowMarkets: MarketItem[] = [
     secondary: "70% LTV",
     icon: "cryptocurrency-color:eth",
     color: "bg-[#3B33BD]",
+    category: "Borrow",
+    tvl: "$38.6M",
+    utilization: "70%",
+    risk: "Medium",
+    description: "Borrow market for cbETH collateral with moderate rate movement.",
+    chartData: marketChartSeries.volatile,
   },
   {
     asset: "MOM",
@@ -69,6 +129,12 @@ const borrowMarkets: MarketItem[] = [
     secondary: "Beta",
     icon: "solar:stars-bold",
     color: "bg-[#ccff00]",
+    category: "Borrow",
+    tvl: "$4.8M",
+    utilization: "46%",
+    risk: "High",
+    description: "Beta borrow market with higher rate uncertainty and smaller liquidity.",
+    chartData: marketChartSeries.warning,
   },
 ];
 
@@ -80,6 +146,12 @@ const riskWatch: MarketItem[] = [
     secondary: "89% used",
     icon: "token-branded:pendle",
     color: "bg-[#242620]",
+    category: "Risk",
+    tvl: "$12.6M",
+    utilization: "89%",
+    risk: "High",
+    description: "High utilization can make exits slower and rates less predictable.",
+    chartData: marketChartSeries.warning,
   },
   {
     asset: "Ethena",
@@ -88,6 +160,12 @@ const riskWatch: MarketItem[] = [
     secondary: "Review",
     icon: "token-branded:ethena",
     color: "bg-[#20211f]",
+    category: "Risk",
+    tvl: "$28.9M",
+    utilization: "73%",
+    risk: "Medium",
+    description: "Yield loop is active but should be reviewed before adding more size.",
+    chartData: marketChartSeries.warning,
   },
 ];
 
@@ -104,9 +182,13 @@ function matchesMarket(item: MarketItem, query: string) {
 function MarketList({
   title,
   items,
+  selectedMarket,
+  onSelect,
 }: {
   title: string;
   items: MarketItem[];
+  selectedMarket: MarketItem;
+  onSelect: (item: MarketItem) => void;
 }) {
   return (
     <motion.section
@@ -126,37 +208,45 @@ function MarketList({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="flex min-h-[68px] items-center gap-3"
           >
-            <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${item.color}`}>
-              <Icon
-                icon={item.icon}
-                aria-hidden="true"
-                width={24}
-                height={24}
-                className={item.color === "bg-[#ccff00]" ? "text-black" : "text-white"}
-              />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-base font-bold text-white">
-                {item.asset}
+            <button
+              type="button"
+              onClick={() => onSelect(item)}
+              className={cn(
+                "flex min-h-[68px] w-full items-center gap-3 rounded-[20px] px-2 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
+                selectedMarket === item ? "bg-white/[0.06]" : "hover:bg-white/[0.04]",
+              )}
+            >
+              <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${item.color}`}>
+                <Icon
+                  icon={item.icon}
+                  aria-hidden="true"
+                  width={24}
+                  height={24}
+                  className={item.color === "bg-[#ccff00]" ? "text-black" : "text-white"}
+                />
               </span>
-              <span className="mt-0.5 block text-sm font-medium text-[#8E8E93]">
-                {item.protocol}
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-base font-bold text-white">
+                  {item.asset}
+                </span>
+                <span className="mt-0.5 block text-sm font-medium text-[#8E8E93]">
+                  {item.protocol}
+                </span>
               </span>
-            </span>
-            <span className="text-right">
-              <span className="block text-sm font-bold text-white">
-                {item.primary}
+              <span className="text-right">
+                <span className="block text-sm font-bold text-white">
+                  {item.primary}
+                </span>
+                <span
+                  className={`mt-0.5 block text-xs font-black ${
+                    item.positive ? "text-[#ccff00]" : "text-[#A7A7A7]"
+                  }`}
+                >
+                  {item.secondary}
+                </span>
               </span>
-              <span
-                className={`mt-0.5 block text-xs font-black ${
-                  item.positive ? "text-[#ccff00]" : "text-[#A7A7A7]"
-                }`}
-              >
-                {item.secondary}
-              </span>
-            </span>
+            </button>
           </motion.div>
         ))}
       </div>
@@ -164,8 +254,109 @@ function MarketList({
   );
 }
 
+function MarketDetail({
+  market,
+  range,
+  onRangeChange,
+}: {
+  market: MarketItem;
+  range: TimeRange;
+  onRangeChange: (range: TimeRange) => void;
+}) {
+  const tone =
+    market.risk === "High" ? "red" : market.risk === "Medium" ? "yellow" : "green";
+
+  return (
+    <motion.section
+      key={`${market.category}-${market.asset}-${market.protocol}`}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="mt-5 rounded-[28px] border border-white/10 bg-[#111217] p-4"
+    >
+      <div className="flex items-start gap-3">
+        <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${market.color}`}>
+          <Icon
+            icon={market.icon}
+            aria-hidden="true"
+            width={28}
+            height={28}
+            className={market.color === "bg-[#ccff00]" ? "text-black" : "text-white"}
+          />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="truncate text-lg font-black text-white">
+                {market.asset} on {market.protocol}
+              </h2>
+              <p className="mt-1 text-sm font-medium leading-snug text-[#A7A7B7]">
+                {market.description}
+              </p>
+            </div>
+            <span
+              className={cn(
+                "shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-black",
+                market.risk === "Low" && "border-[#ccff00]/25 bg-[#ccff00]/10 text-[#ccff00]",
+                market.risk === "Medium" && "border-[#FFD166]/25 bg-[#FFD166]/10 text-[#FFD166]",
+                market.risk === "High" && "border-[#FF6B6B]/25 bg-[#FF6B6B]/10 text-[#FF6B6B]",
+              )}
+            >
+              {market.risk}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-[18px] border border-white/10">
+        {[
+          ["Rate", market.primary],
+          ["TVL", market.tvl],
+          ["Util.", market.utilization],
+        ].map(([label, value], index) => (
+          <div
+            key={label}
+            className={cn("p-3", index < 2 && "border-r border-white/10")}
+          >
+            <p className="text-xs font-medium text-[#A7A7B7]">{label}</p>
+            <p className="mt-1 text-sm font-black text-white">{value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4">
+        <TimeRangeControl value={range} onChange={onRangeChange} />
+        <MiniChart
+          values={market.chartData[range]}
+          label={`${market.category} market trend`}
+          tone={tone}
+          className="mt-3"
+        />
+      </div>
+
+      <div className="mt-4 flex gap-2">
+        <Link
+          href={market.category === "Borrow" ? "/assets" : "/ai/strategy"}
+          className="flex h-11 flex-1 items-center justify-center rounded-full bg-[#ccff00] text-sm font-black text-black transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/70"
+        >
+          {market.category === "Borrow" ? "Review collateral" : "View strategy"}
+        </Link>
+        <Link
+          href="/ai"
+          aria-label="Ask agent about market"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[#ccff00] transition-colors hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+        >
+          <Icon icon="solar:stars-bold" aria-hidden="true" width={20} height={20} />
+        </Link>
+      </div>
+    </motion.section>
+  );
+}
+
 export default function ExplorePage() {
   const [query, setQuery] = React.useState("");
+  const [selectedMarket, setSelectedMarket] = React.useState<MarketItem>(lendingPools[0]);
+  const [marketRange, setMarketRange] = React.useState<TimeRange>("1W");
 
   const filteredLending = React.useMemo(
     () => (query.trim() ? lendingPools.filter((item) => matchesMarket(item, query)) : lendingPools),
@@ -253,11 +444,38 @@ export default function ExplorePage() {
           </div>
         </motion.section>
 
+        <MarketDetail
+          market={selectedMarket}
+          range={marketRange}
+          onRangeChange={setMarketRange}
+        />
+
         {hasResults ? (
           <>
-            {filteredLending.length > 0 ? <MarketList title="Best lend rates" items={filteredLending} /> : null}
-            {filteredBorrow.length > 0 ? <MarketList title="Borrow markets" items={filteredBorrow} /> : null}
-            {filteredRisk.length > 0 ? <MarketList title="Risk watch" items={filteredRisk} /> : null}
+            {filteredLending.length > 0 ? (
+              <MarketList
+                title="Best lend rates"
+                items={filteredLending}
+                selectedMarket={selectedMarket}
+                onSelect={setSelectedMarket}
+              />
+            ) : null}
+            {filteredBorrow.length > 0 ? (
+              <MarketList
+                title="Borrow markets"
+                items={filteredBorrow}
+                selectedMarket={selectedMarket}
+                onSelect={setSelectedMarket}
+              />
+            ) : null}
+            {filteredRisk.length > 0 ? (
+              <MarketList
+                title="Risk watch"
+                items={filteredRisk}
+                selectedMarket={selectedMarket}
+                onSelect={setSelectedMarket}
+              />
+            ) : null}
           </>
         ) : (
           <motion.div

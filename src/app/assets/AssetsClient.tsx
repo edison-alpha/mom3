@@ -6,6 +6,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { FloatingMenuButton } from "@/components/ui/menu-button";
+import { MiniChart, TimeRangeControl, type TimeRange } from "@/components/ui/mini-chart";
 import { cn } from "@/lib/utils";
 
 type Tab = "assets" | "positions" | "summary";
@@ -19,6 +20,12 @@ type Asset = {
   value: string;
   chain: string;
   icon: string;
+  allocation: string;
+  change: string;
+  price: string;
+  avgCost: string;
+  detail: string;
+  chartData: Record<TimeRange, number[]>;
 };
 
 type Position = {
@@ -33,6 +40,9 @@ type Position = {
   icon: string;
   protocolIcon: string;
   protocolTone: string;
+  action: string;
+  exposure: string;
+  chartData: Record<TimeRange, number[]>;
 };
 
 const tabs: { id: Tab; label: string }[] = [
@@ -62,6 +72,27 @@ const quickActions = [
   },
 ];
 
+const chartSeries: Record<string, Record<TimeRange, number[]>> = {
+  steady: {
+    "1D": [0, 0.1, 0.08, 0.18, 0.22, 0.2, 0.28],
+    "1W": [0, 0.4, 0.35, 0.7, 0.92, 1.1, 1.24],
+    "1M": [0, 1.2, 1.8, 2.4, 3.1, 3.8, 4.2],
+    "1Y": [0, 3.2, 5.6, 8.4, 11.8, 14.6, 18.2],
+  },
+  volatile: {
+    "1D": [0, -0.4, 0.8, 0.2, 1.2, 0.6, 1.7],
+    "1W": [0, 2.2, -1.4, 3.8, 2.1, 5.2, 4.4],
+    "1M": [0, 4.8, 1.2, 7.2, 9.4, 6.6, 12.8],
+    "1Y": [0, 18, -6, 24, 42, 31, 58],
+  },
+  risk: {
+    "1D": [0, -0.8, -0.4, -1.4, -0.9, -1.8, -1.2],
+    "1W": [0, -2.2, -1.5, -4.1, -3.4, -5.6, -4.8],
+    "1M": [0, -4.8, -2.2, -7.4, -9.8, -6.1, -11.2],
+    "1Y": [0, 8, -12, 4, -18, -6, -24],
+  },
+};
+
 const assets: Asset[] = [
   {
     symbol: "USDC",
@@ -70,6 +101,12 @@ const assets: Asset[] = [
     value: "$1,420.00",
     chain: "Base",
     icon: "cryptocurrency-color:usdc",
+    allocation: "56.8%",
+    change: "+0.24%",
+    price: "$1.00",
+    avgCost: "$1.00",
+    detail: "Stablecoin utama untuk deposit, lending, dan pembayaran harian.",
+    chartData: chartSeries.steady,
   },
   {
     symbol: "ETH",
@@ -78,6 +115,12 @@ const assets: Asset[] = [
     value: "$1,046.80",
     chain: "Arbitrum",
     icon: "cryptocurrency-color:eth",
+    allocation: "41.9%",
+    change: "+1.72%",
+    price: "$2,492.38",
+    avgCost: "$2,420.00",
+    detail: "Aset volatil untuk collateral dan eksposur pertumbuhan.",
+    chartData: chartSeries.volatile,
   },
   {
     symbol: "USDe",
@@ -86,6 +129,12 @@ const assets: Asset[] = [
     value: "$620.00",
     chain: "Ethereum",
     icon: "token-branded:ethena",
+    allocation: "24.8%",
+    change: "+0.41%",
+    price: "$1.00",
+    avgCost: "$0.99",
+    detail: "Stable yield asset dengan risiko protokol yang perlu dipantau.",
+    chartData: chartSeries.steady,
   },
   {
     symbol: "USDT",
@@ -94,6 +143,12 @@ const assets: Asset[] = [
     value: "$430.00",
     chain: "Morpho",
     icon: "cryptocurrency-color:usdt",
+    allocation: "17.2%",
+    change: "+0.12%",
+    price: "$1.00",
+    avgCost: "$1.00",
+    detail: "Stablecoin cadangan untuk lending konservatif dan likuiditas.",
+    chartData: chartSeries.steady,
   },
   {
     symbol: "PT-sUSDe",
@@ -102,6 +157,12 @@ const assets: Asset[] = [
     value: "$210.00",
     chain: "Pendle",
     icon: "token-branded:pendle",
+    allocation: "8.4%",
+    change: "-1.12%",
+    price: "$1.00",
+    avgCost: "$1.04",
+    detail: "Yield token dengan sensitivitas terhadap expiry dan likuiditas market.",
+    chartData: chartSeries.risk,
   },
   {
     symbol: "ZORB",
@@ -110,6 +171,12 @@ const assets: Asset[] = [
     value: "$184.20",
     chain: "Zora",
     icon: "simple-icons:zora",
+    allocation: "7.4%",
+    change: "-4.80%",
+    price: "$1.00",
+    avgCost: "$1.18",
+    detail: "Eksperimen creator yield dengan volatilitas dan likuiditas lebih tinggi.",
+    chartData: chartSeries.risk,
   },
 ];
 
@@ -126,6 +193,9 @@ const positions: Position[] = [
     icon: "cryptocurrency-color:usdc",
     protocolIcon: "simple-icons:aave",
     protocolTone: "text-[#B650F2]",
+    action: "Keep supplied",
+    exposure: "$1,250 stablecoin",
+    chartData: chartSeries.steady,
   },
   {
     asset: "ETH",
@@ -139,6 +209,9 @@ const positions: Position[] = [
     icon: "cryptocurrency-color:eth",
     protocolIcon: "simple-icons:aave",
     protocolTone: "text-[#B650F2]",
+    action: "Watch collateral",
+    exposure: "0.42 ETH collateral",
+    chartData: chartSeries.volatile,
   },
   {
     asset: "USDe",
@@ -152,6 +225,9 @@ const positions: Position[] = [
     icon: "token-branded:ethena",
     protocolIcon: "simple-icons:ethereum",
     protocolTone: "text-[#8EA7FF]",
+    action: "Limit size",
+    exposure: "$620 synthetic stable",
+    chartData: chartSeries.steady,
   },
   {
     asset: "USDT",
@@ -165,6 +241,9 @@ const positions: Position[] = [
     icon: "cryptocurrency-color:usdt",
     protocolIcon: "simple-icons:morpho",
     protocolTone: "text-[#2E5BFF]",
+    action: "Keep supplied",
+    exposure: "$430 stablecoin",
+    chartData: chartSeries.steady,
   },
   {
     asset: "USDC",
@@ -178,6 +257,9 @@ const positions: Position[] = [
     icon: "cryptocurrency-color:usdc",
     protocolIcon: "simple-icons:uniswap",
     protocolTone: "text-[#FF007A]",
+    action: "Review fees",
+    exposure: "$360 LP range",
+    chartData: chartSeries.volatile,
   },
   {
     asset: "ZORB",
@@ -191,6 +273,9 @@ const positions: Position[] = [
     icon: "simple-icons:zora",
     protocolIcon: "simple-icons:zora",
     protocolTone: "text-white",
+    action: "Reduce exposure",
+    exposure: "$184 creator yield",
+    chartData: chartSeries.risk,
   },
 ];
 
@@ -221,7 +306,86 @@ function PositionIcon({ position }: { position: Position }) {
   );
 }
 
-function DetailPanel({ position }: { position: Position }) {
+function AssetDetailPanel({
+  asset,
+  range,
+  onRangeChange,
+}: {
+  asset: Asset;
+  range: TimeRange;
+  onRangeChange: (range: TimeRange) => void;
+}) {
+  const tone = asset.change.startsWith("-") ? "red" : "green";
+
+  return (
+    <section className="rounded-[24px] border border-white/10 bg-[#111217] p-4">
+      <div className="flex items-start gap-3">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
+          <Icon icon={asset.icon} className="h-8 w-8" aria-hidden="true" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="truncate text-lg font-black text-white">
+                {asset.symbol} Detail
+              </h2>
+              <p className="mt-1 text-sm font-medium leading-snug text-[#A7A7B7]">
+                {asset.detail}
+              </p>
+            </div>
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-2.5 py-1 text-xs font-black",
+                tone === "green"
+                  ? "bg-[#ccff00]/10 text-[#ccff00]"
+                  : "bg-[#FF6B6B]/10 text-[#FF6B6B]",
+              )}
+            >
+              {asset.change}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        {[
+          ["Value", asset.value],
+          ["Allocation", asset.allocation],
+          ["Price", asset.price],
+          ["Avg cost", asset.avgCost],
+        ].map(([label, value]) => (
+          <div key={label} className="rounded-[16px] border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-xs font-medium text-[#A7A7B7]">{label}</p>
+            <p className="mt-1 text-sm font-black text-white">{value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4">
+        <TimeRangeControl value={range} onChange={onRangeChange} />
+        <MiniChart
+          values={asset.chartData[range]}
+          label={`${asset.symbol} performance`}
+          tone={tone}
+          className="mt-3"
+        />
+      </div>
+    </section>
+  );
+}
+
+function DetailPanel({
+  position,
+  range,
+  onRangeChange,
+}: {
+  position: Position;
+  range: TimeRange;
+  onRangeChange: (range: TimeRange) => void;
+}) {
+  const chartTone =
+    position.risk === "High" ? "red" : position.risk === "Medium" ? "yellow" : "green";
+
   return (
     <section className="rounded-[24px] border border-white/10 bg-[#111217] p-4">
       <div className="flex items-start gap-3">
@@ -246,6 +410,16 @@ function DetailPanel({ position }: { position: Position }) {
         </div>
       </div>
 
+      <div className="mt-4">
+        <TimeRangeControl value={range} onChange={onRangeChange} />
+        <MiniChart
+          values={position.chartData[range]}
+          label={`${position.protocol} position trend`}
+          tone={chartTone}
+          className="mt-3"
+        />
+      </div>
+
       <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-[18px] border border-white/10">
         <div className="border-r border-white/10 p-3">
           <p className="text-xs font-medium text-[#A7A7B7]">Risk</p>
@@ -260,6 +434,17 @@ function DetailPanel({ position }: { position: Position }) {
         <div className="p-3">
           <p className="text-xs font-medium text-[#A7A7B7]">Return</p>
           <p className="mt-1 text-base font-black text-white">{position.detail}</p>
+        </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <div className="rounded-[16px] border border-white/10 bg-white/[0.03] p-3">
+          <p className="text-xs font-medium text-[#A7A7B7]">Action</p>
+          <p className="mt-1 text-sm font-black text-white">{position.action}</p>
+        </div>
+        <div className="rounded-[16px] border border-white/10 bg-white/[0.03] p-3">
+          <p className="text-xs font-medium text-[#A7A7B7]">Exposure</p>
+          <p className="mt-1 text-sm font-black text-white">{position.exposure}</p>
         </div>
       </div>
 
@@ -283,7 +468,10 @@ const tabVariants = {
 
 export default function AssetsClient() {
   const [activeTab, setActiveTab] = React.useState<Tab>("assets");
+  const [selectedAsset, setSelectedAsset] = React.useState(assets[0]);
   const [selectedPosition, setSelectedPosition] = React.useState(positions[0]);
+  const [assetRange, setAssetRange] = React.useState<TimeRange>("1W");
+  const [positionRange, setPositionRange] = React.useState<TimeRange>("1W");
 
   const cta =
     activeTab === "positions"
@@ -399,39 +587,56 @@ export default function AssetsClient() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.25 }}
-              className="mt-4 overflow-hidden rounded-[24px] bg-[#1F1F21]"
+              className="mt-4 space-y-4"
             >
-              {assets.map((asset, index) => (
-                <motion.div
-                  key={asset.symbol}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Link
-                    href="#"
-                    className="flex min-h-[76px] items-center gap-3 border-b border-white/[0.06] px-4 py-3 last:border-b-0 transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+              <AssetDetailPanel
+                asset={selectedAsset}
+                range={assetRange}
+                onRangeChange={setAssetRange}
+              />
+
+              <div className="overflow-hidden rounded-[24px] bg-[#1F1F21]">
+                {assets.map((asset, index) => (
+                  <motion.div
+                    key={asset.symbol}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
                   >
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
-                      <Icon icon={asset.icon} className="h-7 w-7" aria-hidden="true" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-base font-bold text-white">
-                        {asset.name}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedAsset(asset)}
+                      className={cn(
+                        "flex min-h-[76px] w-full items-center gap-3 border-b border-white/[0.06] px-4 py-3 text-left last:border-b-0 transition-colors focus-visible:ring-2 focus-visible:ring-[#3B33BD]",
+                        selectedAsset === asset ? "bg-white/[0.06]" : "hover:bg-white/[0.04]",
+                      )}
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
+                        <Icon icon={asset.icon} className="h-7 w-7" aria-hidden="true" />
                       </span>
-                      <span className="mt-1 block text-sm font-medium text-[#8E8E93]">
-                        {asset.amount} on {asset.chain}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-base font-bold text-white">
+                          {asset.name}
+                        </span>
+                        <span className="mt-1 block text-sm font-medium text-[#8E8E93]">
+                          {asset.amount} on {asset.chain}
+                        </span>
                       </span>
-                    </span>
-                    <span className="text-right">
-                      <span className="block text-sm font-bold text-white">{asset.value}</span>
-                      <span className="mt-1 block text-xs font-black text-[#ccff00]">
-                        {asset.symbol}
+                      <span className="text-right">
+                        <span className="block text-sm font-bold text-white">{asset.value}</span>
+                        <span
+                          className={cn(
+                            "mt-1 block text-xs font-black",
+                            asset.change.startsWith("-") ? "text-[#FF6B6B]" : "text-[#ccff00]",
+                          )}
+                        >
+                          {asset.change}
+                        </span>
                       </span>
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
             </motion.section>
           ) : null}
 
@@ -493,7 +698,11 @@ export default function AssetsClient() {
                 ))}
               </div>
 
-              <DetailPanel position={selectedPosition} />
+              <DetailPanel
+                position={selectedPosition}
+                range={positionRange}
+                onRangeChange={setPositionRange}
+              />
             </motion.section>
           ) : null}
 
@@ -538,7 +747,11 @@ export default function AssetsClient() {
                 ))}
               </div>
 
-              <DetailPanel position={selectedPosition} />
+              <DetailPanel
+                position={selectedPosition}
+                range={positionRange}
+                onRangeChange={setPositionRange}
+              />
             </motion.section>
           ) : null}
         </AnimatePresence>

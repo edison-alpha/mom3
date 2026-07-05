@@ -131,8 +131,8 @@ export default function Dashboard() {
   }, []);
 
   const activeMode = portfolioModes[activeModeIndex];
-  const balanceValue = hasAssets ? 2500 : 0;
-  const pnlValue = hasAssets ? 42.3 : -0.675;
+  const balanceValue = hasAssets ? 109500 : 0;
+  const pnlValue = hasAssets ? 42.3 : -0.00;
   const balanceDisplay = formatCurrency(balanceValue, currency);
   const pnlDisplay = formatCurrency(Math.abs(pnlValue), currency);
 
