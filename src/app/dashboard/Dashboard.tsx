@@ -95,11 +95,35 @@ const portfolioModes = [
   },
 ];
 
+type CurrencyCode = "USD" | "IDR" | "EUR";
+
+const currencyOptions: Record<
+  CurrencyCode,
+  { label: CurrencyCode; locale: string; rate: number }
+> = {
+  USD: { label: "USD", locale: "en-US", rate: 1 },
+  IDR: { label: "IDR", locale: "id-ID", rate: 17900 },
+  EUR: { label: "EUR", locale: "de-DE", rate: 0.92 },
+};
+
+function formatCurrency(amountUsd: number, currency: CurrencyCode) {
+  const option = currencyOptions[currency];
+
+  return new Intl.NumberFormat(option.locale, {
+    style: "currency",
+    currency,
+    maximumFractionDigits: currency === "IDR" ? 0 : 2,
+    minimumFractionDigits: currency === "IDR" ? 0 : 2,
+  }).format(amountUsd * option.rate);
+}
+
 export default function Dashboard() {
   const [balanceHidden, setBalanceHidden] = useState(false);
   const [hasAssets, setHasAssets] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [activeModeIndex, setActiveModeIndex] = useState(0);
+  const [currency, setCurrency] = useState<CurrencyCode>("USD");
+  const [currencyOpen, setCurrencyOpen] = useState(false);
 
   useEffect(() => {
     setHasAssets(localStorage.getItem("mom3-demo-balance") === "1");
@@ -107,6 +131,10 @@ export default function Dashboard() {
   }, []);
 
   const activeMode = portfolioModes[activeModeIndex];
+  const balanceValue = hasAssets ? 2500 : 0;
+  const pnlValue = hasAssets ? 42.3 : -0.675;
+  const balanceDisplay = formatCurrency(balanceValue, currency);
+  const pnlDisplay = formatCurrency(Math.abs(pnlValue), currency);
 
   return (
     <main className="min-h-screen w-full bg-black font-sans text-white antialiased">
@@ -134,20 +162,66 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="inline-flex h-10 items-center gap-2 rounded-full bg-[#1C1C1E] px-3 text-xs font-bold text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
-            aria-label="Select wallet currency"
-          >
-            <Icon
-              icon="ic:twotone-wallet"
-              aria-hidden="true"
-              width={20}
-              height={20}
-            />
-            USD
-            <ChevronDown className="h-3.5 w-3.5 text-[#9A9AA2]" aria-hidden="true" />
-          </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setCurrencyOpen((value) => !value)}
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-[#1C1C1E] px-3 text-xs font-bold text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
+              aria-label="Select wallet currency"
+              aria-expanded={currencyOpen}
+              aria-haspopup="menu"
+            >
+              <Icon
+                icon="ic:twotone-wallet"
+                aria-hidden="true"
+                width={20}
+                height={20}
+              />
+              {currency}
+              <ChevronDown
+                className={cn(
+                  "h-3.5 w-3.5 text-[#9A9AA2] transition-transform",
+                  currencyOpen && "rotate-180"
+                )}
+                aria-hidden="true"
+              />
+            </button>
+
+            {currencyOpen ? (
+              <div
+                role="menu"
+                className="absolute right-0 top-12 z-30 w-32 overflow-hidden rounded-2xl border border-white/10 bg-[#16161A]/95 p-1.5 shadow-[0_18px_45px_-18px_rgba(0,0,0,0.75)] backdrop-blur-xl"
+              >
+                {(Object.keys(currencyOptions) as CurrencyCode[]).map((code) => (
+                  <button
+                    key={code}
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setCurrency(code);
+                      setCurrencyOpen(false);
+                    }}
+                    className={cn(
+                      "flex h-9 w-full items-center justify-between rounded-xl px-3 text-xs font-bold transition-colors",
+                      currency === code
+                        ? "bg-[#3B33BD] text-[#ccff00]"
+                        : "text-white/75 hover:bg-white/[0.08] hover:text-white"
+                    )}
+                  >
+                    {code}
+                    {currency === code ? (
+                      <Icon
+                        icon="material-symbols:check-rounded"
+                        width={17}
+                        height={17}
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </motion.header>
 
         <motion.section
@@ -186,13 +260,7 @@ export default function Dashboard() {
             </div>
 
             <p className="mt-0.5 text-4xl font-bold tracking-tight text-white">
-              {!mounted ? "****" : balanceHidden ? (
-                "****"
-              ) : (
-                <>
-                  <span className="align-top text-xl">$</span>{hasAssets ? "2,500.00" : "00.00"}
-                </>
-              )}
+              {!mounted || balanceHidden ? "****" : balanceDisplay}
             </p>
 
             <p
@@ -205,7 +273,7 @@ export default function Dashboard() {
                     : "text-[#b91c1c]"
               )}
             >
-              <span>{!mounted || balanceHidden ? "****" : (hasAssets ? "+$42.30" : "-$00.675")}</span>
+              <span>{!mounted || balanceHidden ? "****" : `${pnlValue >= 0 ? "+" : "-"}${pnlDisplay}`}</span>
               <span className={cn("rounded-md px-1.5 py-0.5", !mounted || balanceHidden ? "bg-black/10" : hasAssets ? "bg-[#ccff00]/15" : "bg-[#b91c1c]/15")}>
                 {!mounted || balanceHidden ? "***" : (hasAssets ? "+1.72%" : "-100%")}
               </span>
@@ -307,11 +375,9 @@ export default function Dashboard() {
           </div>
 
           <motion.div
-            key={activeMode.label}
-            initial={{ opacity: 0, y: 8, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.28, ease: "easeOut" }}
-            className="mt-3 rounded-[20px] border border-white/10 bg-[linear-gradient(115deg,#17181d_0%,#111216_100%)] p-3 transition-all duration-700"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="mt-3 rounded-[20px] border border-white/10 bg-[linear-gradient(115deg,#17181d_0%,#111216_100%)] p-3"
           >
             <div className="flex items-start gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#3B33BD]/20 text-[#ccff00]">
@@ -405,7 +471,7 @@ export default function Dashboard() {
                 </span>
               </span>
               <span className="hidden rounded-full border border-[#3B33BD]/25 bg-[#15142a] px-3 py-1.5 text-xs font-bold text-[#3B33BD] min-[390px]:inline-flex">
-                $2,500.00
+                {formatCurrency(2500, currency)}
               </span>
               <ChevronRight className="h-5 w-5 shrink-0 text-white" aria-hidden="true" />
             </Link>
