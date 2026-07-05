@@ -10,7 +10,7 @@ import { PrimarySwipeButton } from "@/components/ui/swipper-button";
 export default function Hero() {
   return (
     <section className="relative bg-[#E6E1F0] px-5 pt-2 pb-12 md:px-10 md:pt-3 md:pb-20">
-      <div className="mx-auto mt-16 max-w-6xl text-center md:mt-28">
+      <div className="mx-auto mt-20 max-w-6xl text-center md:mt-28">
         <h1 className="font-display text-stroke-bold text-5xl font-black leading-[0.95] tracking-tight text-[#0A0A0A] md:text-6xl lg:text-[88px]">
           <span className="block">One wallet.</span>
           <span className="block">Smarter yield.</span>
