@@ -503,12 +503,19 @@ export default function AssetsClient() {
           <h1 className="text-xl font-bold text-white">My Assets</h1>
         </header>
 
-        <section className="mt-10 text-center">
-          <p className="text-4xl font-bold tracking-tight text-white">
+        <section className="mt-6 rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_50%_0%,rgba(59,51,189,0.34),rgba(17,18,23,1)_58%)] p-4 text-center">
+          <p className="text-xs font-black uppercase tracking-normal text-[#8F8F96]">
+            Portfolio value
+          </p>
+          <p className="mt-1 text-4xl font-bold tracking-tight text-white">
             <span className="align-top text-xl">$</span>2,500.00
           </p>
-          <div className="relative mx-auto mt-4 flex h-32 w-56 items-end justify-center">
-            <svg viewBox="0 0 200 120" className="h-32 w-56">
+          <p className="mx-auto mt-2 max-w-[280px] text-sm font-medium leading-snug text-[#A7A7B7]">
+            Stablecoin-heavy allocation keeps your wallet healthy while AI watches
+            risk, yield, and borrow usage.
+          </p>
+          <div className="relative mx-auto mt-4 flex h-36 w-56 items-end justify-center">
+            <svg viewBox="0 0 200 140" className="h-36 w-56">
               <defs>
                 <linearGradient id="gauge-red" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#FF4444" />
@@ -543,8 +550,8 @@ export default function AssetsClient() {
               />
               <circle cx="100" cy="100" r="5" fill="white" />
 
-              <text x="100" y="120" textAnchor="middle" className="fill-white text-[22px] font-black">86</text>
-              <text x="100" y="120" textAnchor="middle" className="fill-[#8F8F96] text-[13px] font-semibold" dy="14">/ 100 health</text>
+              <text x="100" y="126" textAnchor="middle" className="fill-white text-[22px] font-black">86</text>
+              <text x="100" y="139" textAnchor="middle" className="fill-[#8F8F96] text-[13px] font-semibold">/ 100 health</text>
             </svg>
           </div>
         </section>
@@ -753,7 +760,7 @@ export default function AssetsClient() {
 
         <Link
           href={cta.href}
-          className="mt-5 flex h-14 items-center justify-center rounded-full bg-[#ccff00] px-5 text-base font-black text-black transition-transform active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#ccff00]/70"
+          className="mt-5 flex h-14 items-center justify-center rounded-full bg-[#ccff00] px-5 text-base font-black text-[#3B33BD] transition-transform active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#ccff00]/70"
         >
           {cta.label}
           <Icon icon={cta.icon} className="ml-2 h-5 w-5" aria-hidden="true" />
