@@ -3,17 +3,17 @@ import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  applicationName: "Oni",
+  applicationName: "mom3",
   title: {
-    default: "Oni - Push your brand engagement, earn benefits",
-    template: "%s | Oni",
+    default: "mom3",
+    template: "%s | mom3",
   },
   description:
-    "Earn coins, win collectibles, and get close to the brands you love.",
+    "Manage assets, discover lending markets, and rebalance your portfolio with mom3.",
   manifest: "/manifest.json?v=3",
   appleWebApp: {
     capable: true,
-    title: "Oni",
+    title: "mom3",
     statusBarStyle: "default",
     startupImage: "/apple-touch-icon.png",
   },

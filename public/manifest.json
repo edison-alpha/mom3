@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Oni - Push your brand engagement, earn benefits",
-  "short_name": "Oni",
-  "description": "Earn coins, win collectibles, and get close to the brands you love.",
+  "name": "mom3",
+  "short_name": "mom3",
+  "description": "Manage assets, discover lending markets, and rebalance your portfolio with mom3.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -10,7 +10,7 @@
   "orientation": "portrait",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
-  "categories": ["lifestyle", "shopping", "social"],
+  "categories": ["finance", "productivity", "utilities"],
   "icons": [
     {
       "src": "/icon-192x192.png?v=3",
