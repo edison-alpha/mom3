@@ -235,13 +235,13 @@ export default function FindFavesSection() {
                   </PhoneMock>
                 </div>
 
-                <div className="flex max-w-xs shrink-0 flex-col items-start text-left">
-                  <p className="text-sm font-bold leading-relaxed text-[#0A0A0A] md:text-base">
+                <div className="flex max-w-xs shrink-0 flex-col items-center text-center md:items-start md:text-left">
+                  <p className="text-center text-sm font-bold leading-relaxed text-[#0A0A0A] md:text-left md:text-base">
                     {panel.body}
                   </p>
                   <PrimarySwipeButton
                     asChild
-                    className="mt-6 h-12 px-7 text-base text-[#ccff00] md:h-14 md:px-9 md:text-lg"
+                    className="mx-auto mt-6 h-12 px-7 text-base text-[#ccff00] md:mx-0 md:h-14 md:px-9 md:text-lg"
                   >
                     <Link href="/onboarding">{panel.cta}</Link>
                   </PrimarySwipeButton>

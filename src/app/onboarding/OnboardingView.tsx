@@ -36,7 +36,7 @@ export default function OnboardingView() {
           className="-left-20 bottom-[22%] h-32 w-32 opacity-70 blur-sm"
         />
 
-        <section className="relative z-10 mt-auto -translate-y-8 text-center">
+        <section className="relative z-10 mt-auto -translate-y-14 text-center">
           <p className="text-[52px] font-black leading-none tracking-normal text-white/90 drop-shadow-[0_12px_28px_rgba(26,28,92,0.18)]">
             mom3
           </p>
@@ -45,7 +45,7 @@ export default function OnboardingView() {
           </h1>
         </section>
 
-        <section className="relative z-10 mt-7 -translate-y-8 space-y-3">
+        <section className="relative z-10 mt-7 -translate-y-14 space-y-3">
           <Link
             href="/claim-username"
             className="flex h-14 w-full items-center justify-center gap-3 rounded-[18px] bg-white text-base font-black text-black shadow-[0_16px_42px_-24px_rgba(14,18,58,0.7)] transition-transform active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-white"
@@ -63,7 +63,7 @@ export default function OnboardingView() {
           </Link>
         </section>
 
-        <p className="relative z-10 mx-auto mt-6 max-w-xs -translate-y-8 text-center text-xs font-semibold leading-snug text-white/70">
+        <p className="relative z-10 mx-auto mt-6 max-w-xs -translate-y-14 text-center text-xs font-semibold leading-snug text-white/70">
           By signing up, you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>
