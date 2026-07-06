@@ -93,7 +93,7 @@ export default function AssetDetailView({ asset }: { asset: AssetDetail }) {
             Convert
           </Link>
           <Link
-            href="/send"
+            href={`/send?asset=${encodeURIComponent(asset.symbol)}&chain=${encodeURIComponent(asset.chain)}`}
             className="flex h-12 items-center justify-center rounded-full bg-[#1C1C1E] text-sm font-black text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
           >
             Send
