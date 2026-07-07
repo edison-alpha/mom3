@@ -1,6 +1,12 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import {
+  CHAIN_ID,
+  type ITokenWithUSD,
+  type ITransaction,
+} from "@particle-network/universal-account-sdk";
+import { formatUnits } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -32,9 +38,17 @@ type TokenRow = {
   chainName: string;
   chainId: number;
   tokenAddress: string;
+  isSuggested?: boolean;
 };
 
 type SendStatus = "idle" | "delegating" | "preparing" | "signing";
+
+type SendPreview = {
+  transaction: ITransaction;
+  amount: string;
+  token: TokenRow;
+  recipient: Recipient;
+};
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -46,6 +60,10 @@ const toneToGradient: Record<string, string> = {
 
 function isValidAddress(address: string) {
   return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+function isValidSolanaAddress(address: string) {
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
 }
 
 function tokenIcon(symbol: string) {
@@ -67,6 +85,8 @@ function tokenIcon(symbol: string) {
 
 function chainNameFromId(chainId: number) {
   switch (chainId) {
+    case 101:
+      return "Solana";
     case 1:
       return "Ethereum";
     case 10:
@@ -94,10 +114,177 @@ function chainNameFromId(chainId: number) {
   }
 }
 
+const receiveTokenTemplates: Array<Omit<TokenRow, "id" | "balance" | "amountInUSD">> = [
+  {
+    symbol: "USDC",
+    name: "USD Coin",
+    icon: tokenIcon("USDC"),
+    chainName: "Base",
+    chainId: CHAIN_ID.BASE_MAINNET,
+    tokenAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    isSuggested: true,
+  },
+  {
+    symbol: "USDC",
+    name: "USD Coin",
+    icon: tokenIcon("USDC"),
+    chainName: "Solana",
+    chainId: CHAIN_ID.SOLANA_MAINNET,
+    tokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    isSuggested: true,
+  },
+  {
+    symbol: "SOL",
+    name: "Solana",
+    icon: tokenIcon("SOL"),
+    chainName: "Solana",
+    chainId: CHAIN_ID.SOLANA_MAINNET,
+    tokenAddress: ZERO_ADDRESS,
+    isSuggested: true,
+  },
+];
+
 function formatTokenBalance(balance: number) {
   if (balance === 0) return "0.00";
   if (balance >= 1) return balance.toFixed(4).replace(/\.?(0+)$/, "");
   return balance.toFixed(6).replace(/\.?(0+)$/, "");
+}
+
+function parseDecimalish(value: string | number | null | undefined, decimals = 18) {
+  if (value === null || value === undefined || value === "") return 0;
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+
+  const trimmed = value.trim();
+  if (!trimmed) return 0;
+
+  if (/^\d+$/.test(trimmed) && trimmed.length > Math.max(6, decimals - 2)) {
+    try {
+      return Number(formatUnits(trimmed, decimals));
+    } catch {
+      return 0;
+    }
+  }
+
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function formatUsd(value: number) {
+  if (!Number.isFinite(value)) return "$0.00";
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: value > 0 && value < 0.01 ? 4 : 2,
+    maximumFractionDigits: value > 0 && value < 0.01 ? 6 : 2,
+  }).format(value);
+}
+
+function formatUsdValue(value: string | number | null | undefined) {
+  return formatUsd(parseDecimalish(value));
+}
+
+function getTokenUsdPrice(token: TokenRow | null) {
+  if (!token) return null;
+  if (token.balance > 0 && token.amountInUSD > 0) return token.amountInUSD / token.balance;
+  if (["USDC", "USDT"].includes(token.symbol.toUpperCase())) return 1;
+  return null;
+}
+
+function getEstimatedAmountInUSD(amount: number, token: TokenRow | null) {
+  const price = getTokenUsdPrice(token);
+  if (price === null) return null;
+  return amount * price;
+}
+
+function getTransactionFeeQuote(transaction: ITransaction | null) {
+  if (!transaction) return null;
+  return transaction.gasless ?? transaction.feeQuotes?.[0] ?? null;
+}
+
+function getFeeBreakdownRows(transaction: ITransaction | null) {
+  const feeQuote = getTransactionFeeQuote(transaction);
+  const totals = feeQuote?.fees.totals;
+
+  if (!totals) {
+    return [
+      {
+        label: "Estimated fees",
+        value: "Unavailable",
+      },
+    ];
+  }
+
+  const rows = [
+    {
+      label: "Network + gas",
+      value: feeQuote.fees.freeGasFee ? "Free" : formatUsdValue(totals.gasFeeTokenAmountInUSD),
+    },
+    {
+      label: "Service fee",
+      value: feeQuote.fees.freeServiceFee
+        ? "Free"
+        : formatUsdValue(totals.transactionServiceFeeTokenAmountInUSD),
+    },
+    {
+      label: "LP / settlement",
+      value: formatUsdValue(totals.transactionLPFeeTokenAmountInUSD),
+    },
+  ];
+
+  const solanaRentFee = totals.solanaRentFeeInUSD ?? totals.solanaRentFeeAmountInUSD;
+  if (parseDecimalish(solanaRentFee) > 0) {
+    rows.push({
+      label: "Solana rent",
+      value: formatUsdValue(solanaRentFee),
+    });
+  }
+
+  if (parseDecimalish(totals.solanaMevTipFeeInUSD) > 0) {
+    rows.push({
+      label: "Solana MEV tip",
+      value: formatUsdValue(totals.solanaMevTipFeeInUSD),
+    });
+  }
+
+  return rows;
+}
+
+function getTotalFeeLabel(transaction: ITransaction | null) {
+  const feeQuote = getTransactionFeeQuote(transaction);
+  return formatUsdValue(
+    feeQuote?.fees.totals.feeTokenAmountInUSD ?? transaction?.tokenChanges?.totalFeeInUSD,
+  );
+}
+
+function formatTokenChange(item: ITokenWithUSD) {
+  const decimals = item.token.realDecimals ?? item.token.decimals ?? 18;
+  const amount = parseDecimalish(item.amount, decimals);
+  const symbol = item.token.symbol || item.token.type || "Token";
+  const chain = chainNameFromId(Number(item.token.chainId));
+  return `${formatTokenBalance(amount)} ${symbol.toUpperCase()} on ${chain}`;
+}
+
+function getFundingRows(transaction: ITransaction | null) {
+  if (!transaction) return [];
+
+  const rows =
+    transaction.depositTokens?.length > 0
+      ? transaction.depositTokens
+      : transaction.tokenChanges?.decr ?? [];
+
+  return rows.slice(0, 3).map((item) => ({
+    label: formatTokenChange(item),
+    value: formatUsdValue(item.amountInUSD),
+  }));
+}
+
+function getFeeTokenRows(transaction: ITransaction | null) {
+  const feeQuote = getTransactionFeeQuote(transaction);
+  return (feeQuote?.fees.feeTokens ?? []).slice(0, 2).map((item) => ({
+    label: formatTokenChange(item),
+    value: formatUsdValue(item.amountInUSD),
+  }));
 }
 
 function normalizeAssetQuery(value: string) {
@@ -139,7 +326,11 @@ function findPreferredToken(tokens: TokenRow[], asset: string, chain = "") {
   );
 }
 
-function getAmountValidationMessage(amount: string, selectedToken: TokenRow | null) {
+function getAmountValidationMessage(
+  amount: string,
+  selectedToken: TokenRow | null,
+  totalPrimaryAssetsInUSD: number | null,
+) {
   if (!amount.trim()) return null;
 
   const numericAmount = Number(amount);
@@ -148,11 +339,25 @@ function getAmountValidationMessage(amount: string, selectedToken: TokenRow | nu
     return "Masukkan jumlah yang valid.";
   }
 
-  if (selectedToken && numericAmount > selectedToken.balance) {
-    return `Saldo tidak cukup. Maksimum ${formatTokenBalance(selectedToken.balance)} ${selectedToken.symbol}.`;
+  const estimatedAmountInUSD = getEstimatedAmountInUSD(numericAmount, selectedToken);
+
+  if (
+    totalPrimaryAssetsInUSD !== null &&
+    estimatedAmountInUSD !== null &&
+    estimatedAmountInUSD > totalPrimaryAssetsInUSD
+  ) {
+    return `Universal Balance belum cukup. Estimasi kebutuhan ${formatUsd(estimatedAmountInUSD)}, tersedia ${formatUsd(totalPrimaryAssetsInUSD)}.`;
   }
 
   return null;
+}
+
+function isRecipientValidForToken(recipient: Recipient, selectedToken: TokenRow) {
+  if (selectedToken.chainId === CHAIN_ID.SOLANA_MAINNET) {
+    return isValidSolanaAddress(recipient.address);
+  }
+
+  return isValidAddress(recipient.address);
 }
 
 function isUserRejectedError(cause: unknown) {
@@ -277,13 +482,14 @@ function resolveRecipient(query: string): Recipient | null {
 
   if (known) return known;
 
-  if (isValidAddress(trimmed)) {
+  if (isValidAddress(trimmed) || isValidSolanaAddress(trimmed)) {
     return {
       ...scannedRecipient,
       id: "typed-address",
       handle: "Wallet address",
       name: "External wallet",
       address: trimmed,
+      network: isValidSolanaAddress(trimmed) ? "Solana" : "EVM",
     };
   }
 
@@ -363,6 +569,7 @@ export default function SendView() {
   const [scanOpen, setScanOpen] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
   const [sendStatus, setSendStatus] = React.useState<SendStatus>("idle");
+  const [sendPreview, setSendPreview] = React.useState<SendPreview | null>(null);
   const [sent, setSent] = React.useState(false);
   const [transactionId, setTransactionId] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
@@ -370,8 +577,19 @@ export default function SendView() {
 
   const tokenRows = React.useMemo<TokenRow[]>(() => {
     const assets = primaryAssets?.assets ?? [];
+    const rowsById = new Map<string, TokenRow>();
 
-    return assets
+    receiveTokenTemplates.forEach((token) => {
+      const id = `${token.chainId}-${token.tokenAddress.toLowerCase()}-${token.symbol}`;
+      rowsById.set(id, {
+        ...token,
+        id,
+        balance: 0,
+        amountInUSD: 0,
+      });
+    });
+
+    assets
       .flatMap((asset) => {
         const tokenType = String(asset.tokenType || "TOKEN").toUpperCase();
 
@@ -395,20 +613,43 @@ export default function SendView() {
           };
         });
       })
+      .forEach((token) => rowsById.set(token.id, token));
+
+    return Array.from(rowsById.values())
       .sort((left, right) => {
         if (right.amountInUSD !== left.amountInUSD) return right.amountInUSD - left.amountInUSD;
         if (right.balance !== left.balance) return right.balance - left.balance;
+        if (Number(Boolean(left.isSuggested)) !== Number(Boolean(right.isSuggested))) {
+          return Number(Boolean(left.isSuggested)) - Number(Boolean(right.isSuggested));
+        }
         return left.symbol.localeCompare(right.symbol);
       });
   }, [primaryAssets]);
+
+  const totalPrimaryAssetsInUSD =
+    primaryAssets && "totalAmountInUSD" in primaryAssets
+      ? Number(primaryAssets.totalAmountInUSD || 0)
+      : null;
 
   const selectedToken = React.useMemo(
     () => tokenRows.find((token) => token.id === selectedTokenId) ?? null,
     [selectedTokenId, tokenRows],
   );
   const amountValidationMessage = React.useMemo(
-    () => getAmountValidationMessage(amount, selectedToken),
-    [amount, selectedToken],
+    () => getAmountValidationMessage(amount, selectedToken, totalPrimaryAssetsInUSD),
+    [amount, selectedToken, totalPrimaryAssetsInUSD],
+  );
+  const previewFeeRows = React.useMemo(
+    () => getFeeBreakdownRows(sendPreview?.transaction ?? null),
+    [sendPreview],
+  );
+  const previewFundingRows = React.useMemo(
+    () => getFundingRows(sendPreview?.transaction ?? null),
+    [sendPreview],
+  );
+  const previewFeeTokenRows = React.useMemo(
+    () => getFeeTokenRows(sendPreview?.transaction ?? null),
+    [sendPreview],
   );
   const selectedTokenIsPrefilled = Boolean(
     selectedToken && initialAsset && matchesAsset(selectedToken, initialAsset, initialChain),
@@ -448,6 +689,7 @@ export default function SendView() {
     if (!selectedTokenId || tokenRows.length === 0) return;
     if (!tokenRows.some((token) => token.id === selectedTokenId)) {
       setSelectedTokenId(null);
+      setSendPreview(null);
     }
   }, [selectedTokenId, tokenRows]);
 
@@ -481,6 +723,7 @@ export default function SendView() {
   const resetCompose = () => {
     setSelectedRecipient(null);
     setAmount("");
+    setSendPreview(null);
     setSent(false);
     setTransactionId(null);
     setError(null);
@@ -491,6 +734,7 @@ export default function SendView() {
   const selectRecipient = (recipient: Recipient) => {
     setSelectedRecipient(recipient);
     setAmount("");
+    setSendPreview(null);
     setSent(false);
     setTransactionId(null);
     setError(null);
@@ -513,26 +757,33 @@ export default function SendView() {
     selectRecipient(resolved);
   };
 
-  const canSend = Boolean(
+  const canPreview = Boolean(
     selectedRecipient &&
       selectedToken &&
       universalAccount &&
       Number(amount) > 0 &&
-      Number(amount) <= selectedToken.balance &&
       !amountValidationMessage &&
       !isSending,
   );
 
-  const handleSend = async () => {
+  const handlePreviewSend = async () => {
     if (!universalAccount || !selectedRecipient || !selectedToken) return;
 
-    if (!isValidAddress(selectedRecipient.address)) {
-      setError("Alamat tujuan belum valid.");
+    if (!isRecipientValidForToken(selectedRecipient, selectedToken)) {
+      setError(
+        selectedToken.chainId === CHAIN_ID.SOLANA_MAINNET
+          ? "Alamat tujuan harus alamat Solana untuk token tujuan Solana."
+          : "Alamat tujuan harus alamat EVM untuk token tujuan EVM.",
+      );
       return;
     }
 
     const numericAmount = Number(amount);
-    const validationMessage = getAmountValidationMessage(amount, selectedToken);
+    const validationMessage = getAmountValidationMessage(
+      amount,
+      selectedToken,
+      totalPrimaryAssetsInUSD,
+    );
     if (validationMessage || !Number.isFinite(numericAmount)) {
       setError(validationMessage ?? "Masukkan jumlah yang valid.");
       return;
@@ -543,6 +794,7 @@ export default function SendView() {
     setSendStatus(isDelegated ? "preparing" : "delegating");
     setSent(false);
     setTransactionId(null);
+    setSendPreview(null);
 
     try {
       if (!isDelegated) {
@@ -559,10 +811,40 @@ export default function SendView() {
         receiver: selectedRecipient.address,
       });
 
+      setSendPreview({
+        transaction,
+        amount: amount.trim(),
+        token: selectedToken,
+        recipient: selectedRecipient,
+      });
+    } catch (cause) {
+      if (!isUserRejectedError(cause)) {
+        setError(getSendErrorMessage(cause));
+      }
+    } finally {
+      setIsSending(false);
+      setSendStatus("idle");
+    }
+  };
+
+  const handleConfirmSend = async () => {
+    if (!sendPreview) {
+      await handlePreviewSend();
+      return;
+    }
+
+    setError(null);
+    setIsSending(true);
+    setSendStatus("signing");
+    setSent(false);
+    setTransactionId(null);
+
+    try {
       setSendStatus("signing");
-      const result = await signAndSend(transaction as any);
-      setTransactionId(result.transactionId ?? transaction.transactionId);
+      const result = await signAndSend(sendPreview.transaction as any);
+      setTransactionId(result.transactionId ?? sendPreview.transaction.transactionId);
       setSent(true);
+      setSendPreview(null);
       await refreshAccount();
     } catch (cause) {
       if (!isUserRejectedError(cause)) {
@@ -576,17 +858,19 @@ export default function SendView() {
 
   const handleSendSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    void handleSend();
+    void handlePreviewSend();
   };
 
   const sendButtonLabel =
     sendStatus === "delegating"
       ? "Authorizing..."
       : sendStatus === "preparing"
-        ? "Preparing..."
+        ? "Preparing preview..."
         : sendStatus === "signing"
           ? "Signing..."
-          : "Send";
+          : sendPreview
+            ? "Refresh preview"
+            : "Preview send";
 
   return (
     <MobileShell>
@@ -642,24 +926,24 @@ export default function SendView() {
             </p>
             <div className="mt-3 flex items-center justify-center gap-2">
               <span className="rounded-full bg-[#3B33BD]/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#8F89FF]">
-                EVM
+                {selectedRecipient.network}
               </span>
               <span className="rounded-full bg-white/5 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#A7A7B7]">
-                Real balance
+                Universal Balance
               </span>
             </div>
           </div>
 
           <form onSubmit={handleSendSubmit} className="mt-5 rounded-[28px] bg-[#111217] p-4">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-black uppercase text-[#77777f]">Token</label>
+              <label className="block text-xs font-black uppercase text-[#77777f]">Recipient gets</label>
               <span className="text-xs font-semibold text-[#9A9AA2]">
-                {selectedTokenIsPrefilled ? "Prefilled" : `${tokenRows.length} assets`}
+                {selectedTokenIsPrefilled ? "Prefilled" : `${tokenRows.length} routes`}
               </span>
             </div>
 
             <div className="mt-3 max-h-[38vh] space-y-2 overflow-y-auto pr-1">
-              {isLoading && tokenRows.length === 0 ? (
+              {isLoading && !primaryAssets ? (
                 Array.from({ length: 3 }).map((_, index) => (
                   <div
                     key={index}
@@ -678,7 +962,7 @@ export default function SendView() {
               ) : tokenRows.length > 0 ? (
                 tokenRows.map((token) => {
                   const isSelected = selectedToken?.id === token.id;
-                  const disabled = token.balance <= 0;
+                  const hasLocalBalance = token.balance > 0;
 
                   return (
                     <button
@@ -686,14 +970,15 @@ export default function SendView() {
                       type="button"
                       onClick={() => {
                         setSelectedTokenId(token.id);
+                        setSendPreview(null);
                         setSent(false);
                         setTransactionId(null);
                         setError(null);
                       }}
-                      disabled={disabled}
                       className={cn(
                         "flex min-h-[72px] w-full items-center gap-3 rounded-[22px] border border-white/5 bg-black/20 px-3 py-2 text-left transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-black/20",
                         isSelected && "border-[#ccff00]/50 bg-[#3B33BD]/18",
+                        !hasLocalBalance && !token.isSuggested && "opacity-70",
                       )}
                     >
                       <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
@@ -706,11 +991,11 @@ export default function SendView() {
                         <span className="flex items-center justify-between gap-2">
                           <span className="truncate text-sm font-black text-white">{token.symbol}</span>
                           <span className="text-right text-base font-black text-white">
-                            {formatTokenBalance(token.balance)}
+                            {hasLocalBalance ? formatTokenBalance(token.balance) : "Routeable"}
                           </span>
                         </span>
                         <span className="mt-0.5 block text-xs font-medium text-[#9A9AA2]">
-                          {token.name} • {token.chainName}
+                          {token.name} • receive on {token.chainName}
                         </span>
                       </span>
                     </button>
@@ -746,6 +1031,7 @@ export default function SendView() {
                 value={amount}
                 onChange={(event) => {
                   setAmount(sanitizeAmountInput(event.target.value));
+                  setSendPreview(null);
                   setSent(false);
                   setTransactionId(null);
                   setError(null);
@@ -759,11 +1045,16 @@ export default function SendView() {
                 type="button"
                 onClick={() => {
                   if (!selectedToken) return;
+                  setSendPreview(null);
                   setAmount(selectedToken.balance.toString());
                 }}
-                disabled={!selectedToken}
+                disabled={!selectedToken || selectedToken.balance <= 0}
                 className="flex h-10 min-w-10 items-center justify-center rounded-full bg-[#3B33BD]/20 px-3 text-xs font-black text-[#8F89FF] transition-colors hover:bg-[#3B33BD]/30 focus-visible:ring-2 focus-visible:ring-[#3B33BD] disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label={selectedToken ? `Use max ${selectedToken.symbol} balance` : "Select token first"}
+                aria-label={
+                  selectedToken && selectedToken.balance > 0
+                    ? `Use local ${selectedToken.symbol} balance on ${selectedToken.chainName}`
+                    : "No local balance for selected receive token"
+                }
               >
                 Max
               </button>
@@ -772,10 +1063,13 @@ export default function SendView() {
             {selectedToken ? (
               <div className="mt-2 flex items-center justify-between text-xs font-semibold text-[#9A9AA2]">
                 <span>
-                  Chain: <span className="text-white">{selectedToken.chainName}</span>
+                  Receive: <span className="text-white">{selectedToken.chainName}</span>
                 </span>
                 <span>
-                  Balance: <span className="text-white">{formatTokenBalance(selectedToken.balance)} {selectedToken.symbol}</span>
+                  UA balance:{" "}
+                  <span className="text-white">
+                    {totalPrimaryAssetsInUSD === null ? "Loading" : formatUsd(totalPrimaryAssetsInUSD)}
+                  </span>
                 </span>
               </div>
             ) : null}
@@ -808,6 +1102,117 @@ export default function SendView() {
               </div>
             ) : null}
 
+            {sendPreview ? (
+              <section className="mt-4 rounded-[24px] border border-[#ccff00]/20 bg-[#ccff00]/[0.04] p-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#ccff00]/15 text-[#ccff00]">
+                    <Icon icon="lucide:receipt-text" aria-hidden="true" width={19} height={19} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-black text-white">Review before signing</h3>
+                    <p className="mt-1 text-xs font-medium leading-relaxed text-[#A7A7B7]">
+                      Particle prepared this route. Fees can move slightly before settlement.
+                    </p>
+                  </div>
+                </div>
+
+                <dl className="mt-4 space-y-2.5 text-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <dt className="text-[#9A9AA2]">Recipient gets</dt>
+                    <dd className="text-right font-mono font-black tabular-nums text-white">
+                      {sendPreview.amount} {sendPreview.token.symbol} on {sendPreview.token.chainName}
+                    </dd>
+                  </div>
+                  <div className="flex items-start justify-between gap-3">
+                    <dt className="text-[#9A9AA2]">To</dt>
+                    <dd className="text-right font-mono text-xs font-bold tabular-nums text-white">
+                      {sendPreview.recipient.handle} · {truncateAddress(sendPreview.recipient.address, 5)}
+                    </dd>
+                  </div>
+                  <div className="flex items-start justify-between gap-3 border-t border-white/10 pt-2.5">
+                    <dt className="font-bold text-white">Estimated total fee</dt>
+                    <dd className="font-mono font-black tabular-nums text-[#ccff00]">
+                      {getTotalFeeLabel(sendPreview.transaction)}
+                    </dd>
+                  </div>
+                  {previewFeeRows.map((row) => (
+                    <div key={row.label} className="flex items-start justify-between gap-3">
+                      <dt className="text-[#9A9AA2]">{row.label}</dt>
+                      <dd className="font-mono text-xs font-bold tabular-nums text-white">{row.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="mt-4 rounded-[18px] bg-black/25 p-3">
+                  <p className="text-xs font-black uppercase text-[#77777f]">Funding source</p>
+                  {previewFundingRows.length > 0 ? (
+                    <div className="mt-2 space-y-1.5">
+                      {previewFundingRows.map((row) => (
+                        <div
+                          key={`${row.label}-${row.value}`}
+                          className="flex items-center justify-between gap-3 text-xs"
+                        >
+                          <span className="min-w-0 truncate font-semibold text-white">{row.label}</span>
+                          <span className="shrink-0 font-mono font-bold tabular-nums text-[#A7A7B7]">
+                            {row.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-xs font-medium text-[#A7A7B7]">
+                      Route funding will be selected from your Universal Balance.
+                    </p>
+                  )}
+                </div>
+
+                {previewFeeTokenRows.length > 0 ? (
+                  <div className="mt-3 rounded-[18px] bg-black/25 p-3">
+                    <p className="text-xs font-black uppercase text-[#77777f]">Fee paid with</p>
+                    <div className="mt-2 space-y-1.5">
+                      {previewFeeTokenRows.map((row) => (
+                        <div
+                          key={`${row.label}-${row.value}`}
+                          className="flex items-center justify-between gap-3 text-xs"
+                        >
+                          <span className="min-w-0 truncate font-semibold text-white">{row.label}</span>
+                          <span className="shrink-0 font-mono font-bold tabular-nums text-[#A7A7B7]">
+                            {row.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="mt-3 flex items-center justify-between gap-3 rounded-[18px] bg-black/20 px-3 py-2">
+                  <span className="text-xs font-semibold text-[#9A9AA2]">Signature hash</span>
+                  <span className="font-mono text-xs font-bold tabular-nums text-white">
+                    {truncateAddress(sendPreview.transaction.rootHash, 6)}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleConfirmSend();
+                  }}
+                  disabled={isSending}
+                  aria-busy={isSending && sendStatus === "signing" ? "true" : undefined}
+                  className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#ccff00] text-sm font-black text-[#3B33BD] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/70 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <Icon
+                    icon={isSending && sendStatus === "signing" ? "lucide:loader-circle" : "lucide:send"}
+                    aria-hidden="true"
+                    width={18}
+                    height={18}
+                    className={isSending && sendStatus === "signing" ? "animate-spin" : ""}
+                  />
+                  {isSending && sendStatus === "signing" ? "Signing..." : "Confirm & send"}
+                </button>
+              </section>
+            ) : null}
+
             {sent && transactionId ? (
               <div className="mt-3 rounded-2xl bg-[#ccff00]/10 px-4 py-3 text-sm font-bold text-[#ccff00]">
                 Sent {amount} {selectedToken?.symbol} to {selectedRecipient.handle}.{" "}
@@ -825,18 +1230,23 @@ export default function SendView() {
 
             <button
               type="submit"
-              disabled={!canSend || isLoading}
-              className="mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-[#3B33BD] text-base font-black text-[#ccff00] shadow-[0_10px_28px_-10px_rgba(59,51,189,0.8)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD] disabled:cursor-not-allowed disabled:bg-[#2A2A3E] disabled:text-[#77777f]"
-              aria-busy={isSending ? "true" : undefined}
+              disabled={!canPreview || isLoading || sendStatus === "signing"}
+              className={cn(
+                "mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-full text-base font-black shadow-[0_10px_28px_-10px_rgba(59,51,189,0.8)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD] disabled:cursor-not-allowed disabled:bg-[#2A2A3E] disabled:text-[#77777f]",
+                sendPreview
+                  ? "bg-white/5 text-white hover:bg-white/10"
+                  : "bg-[#3B33BD] text-[#ccff00]",
+              )}
+              aria-busy={isSending && sendStatus !== "signing" ? "true" : undefined}
             >
               <Icon
-                icon={isSending ? "lucide:loader-circle" : "lucide:send"}
+                icon={isSending && sendStatus !== "signing" ? "lucide:loader-circle" : "lucide:receipt-text"}
                 aria-hidden="true"
                 width={20}
                 height={20}
-                className={isSending ? "animate-spin" : ""}
+                className={isSending && sendStatus !== "signing" ? "animate-spin" : ""}
               />
-              {isSending ? sendButtonLabel : "Send"}
+              {sendButtonLabel}
             </button>
           </form>
         </section>
@@ -855,6 +1265,7 @@ export default function SendView() {
               value={query}
               onChange={(event) => {
                 setQuery(event.target.value);
+                setSendPreview(null);
                 setSent(false);
                 setError(null);
               }}
