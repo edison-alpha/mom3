@@ -31,7 +31,7 @@ export function RecipientHeader({ recipient }: { recipient: Recipient }) {
         ) : null}
       </div>
       <p className="mt-2 text-center text-sm font-medium text-[#9A9AA2]">
-        {recipient.name} Ã¢â‚¬Â¢ {truncateAddress(recipient.address, 5)}
+        {recipient.name} • {truncateAddress(recipient.address, 5)}
       </p>
     </div>
   );

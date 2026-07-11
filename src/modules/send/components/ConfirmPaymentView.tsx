@@ -68,7 +68,7 @@ export default function ConfirmPaymentView() {
                 ) : null}
               </div>
               <p className="mt-2 text-center text-sm font-medium text-[#9A9AA2]">
-                {state.recipient.name} Ã¢â‚¬Â¢ {truncateAddress(state.recipient.address, 5)}
+                {state.recipient.name} • {truncateAddress(state.recipient.address, 5)}
               </p>
             </>
           ) : (

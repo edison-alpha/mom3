@@ -46,7 +46,7 @@ export function RecipientRow({
           ) : null}
         </span>
         <span className="mt-0.5 block truncate text-xs font-medium text-[#9A9AA2]">
-          {recipient.name} Ã¢â‚¬Â¢ {truncateAddress(recipient.address)}
+          {recipient.name} • {truncateAddress(recipient.address)}
         </span>
       </span>
       <span className="shrink-0 rounded-full bg-black/30 px-2.5 py-1 text-[10px] font-black text-[#9A9AA2]">

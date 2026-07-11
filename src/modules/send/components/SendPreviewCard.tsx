@@ -49,7 +49,7 @@ export function SendPreviewCard({
           <dt className="text-[#9A9AA2]">To</dt>
           <dd className="flex items-center justify-end gap-2 text-right font-mono text-xs font-bold tabular-nums text-white">
             <span>
-              {sendPreview.recipient.handle} Ã‚Â· {truncateAddress(sendPreview.recipient.address, 5)}
+              {sendPreview.recipient.handle} · {truncateAddress(sendPreview.recipient.address, 5)}
             </span>
             <WalletAvatar
               address={sendPreview.recipient.address}
