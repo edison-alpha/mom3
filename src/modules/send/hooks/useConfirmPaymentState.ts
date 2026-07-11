@@ -1,7 +1,6 @@
 "use client";
 
-import { useUniversalAccount } from "@/providers/UniversalAccountProvider";
-import { parseDecimalish } from "@/lib/format";
+import { useUniversalAccount } from "@/providers/universal-account/components/UniversalAccountProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 
@@ -11,11 +10,9 @@ import {
   addressBook,
   recentRecipients,
   scannedRecipient,
-  ZERO_ADDRESS,
-} from "@/modules/send/constants";
-import type { Recipient, SendPreview, SendStatus, TokenRow } from "@/modules/send/type";
+} from "@/modules/send/constants/send.constants";
+import type { Recipient, SendPreview, SendStatus, TokenRow } from "@/modules/send/types/send.types";
 import {
-  chainNameFromId,
   findPreferredToken,
   getAmountValidationMessage,
   getSendErrorMessage,
@@ -24,8 +21,8 @@ import {
   matchesAsset,
   normalizeAssetQuery,
   resolveRecipient,
-  tokenIcon,
-} from "@/modules/send/utils";
+  normalizePrimaryAssetTokens,
+} from "@/modules/send/utils/send.utils";
 
 export function useConfirmPaymentState() {
   const searchParams = useSearchParams();
@@ -52,41 +49,10 @@ export function useConfirmPaymentState() {
   const [transactionId, setTransactionId] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  const tokenRows = React.useMemo<TokenRow[]>(() => {
-    const assets = primaryAssets?.assets ?? [];
-    const rowsById = new Map<string, TokenRow>();
-
-    assets
-      .flatMap((assetItem) => {
-        const tokenType = String(assetItem.tokenType || "TOKEN").toUpperCase();
-        return assetItem.chainAggregation.map((entry) => {
-          const tokenSymbol = String(entry.token.symbol || tokenType).toUpperCase();
-          const chainId = Number(entry.token.chainId ?? 0);
-          const balance = parseDecimalish(entry.amount, Number(entry.token.realDecimals ?? entry.token.decimals ?? 18));
-          const amountInUSD = parseDecimalish(entry.amountInUSD);
-          const tokenAddress = String(entry.token.address ?? ZERO_ADDRESS);
-
-          return {
-            id: `${chainId}-${tokenAddress.toLowerCase()}-${tokenSymbol}`,
-            symbol: tokenSymbol,
-            name: String(entry.token.name || tokenSymbol),
-            balance,
-            amountInUSD,
-            icon: tokenIcon(tokenSymbol),
-            chainName: chainNameFromId(chainId),
-            chainId,
-            tokenAddress,
-          };
-        });
-      })
-      .forEach((token) => rowsById.set(token.id, token));
-
-    return Array.from(rowsById.values()).sort((left, right) => {
-      if (right.amountInUSD !== left.amountInUSD) return right.amountInUSD - left.amountInUSD;
-      if (right.balance !== left.balance) return right.balance - left.balance;
-      return left.symbol.localeCompare(right.symbol);
-    });
-  }, [primaryAssets]);
+  const tokenRows = React.useMemo(
+    () => normalizePrimaryAssetTokens(primaryAssets),
+    [primaryAssets],
+  );
 
   const totalPrimaryAssetsInUSD =
     primaryAssets && "totalAmountInUSD" in primaryAssets

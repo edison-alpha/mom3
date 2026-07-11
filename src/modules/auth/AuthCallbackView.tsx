@@ -1,11 +1,11 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 import { MobileShell } from "@/components/ui/mobile-shell";
-import { useMagic } from "@/providers/MagicProvider";
+import { useMagic } from "@/providers/magic/components/MagicProvider";
 
 export default function AuthCallbackView() {
   const router = useRouter();
@@ -14,12 +14,16 @@ export default function AuthCallbackView() {
   const hasOAuthParams =
     searchParams.has("magic_credential") || searchParams.has("state");
 
-  useQuery({
-    queryKey: ["auth", "magic-oauth-redirect", searchParams.toString()],
-    queryFn: async () => {
+  const hasCompletedRef = useRef(false);
+
+  useEffect(() => {
+    if (!isReady || hasCompletedRef.current) return;
+    hasCompletedRef.current = true;
+
+    void (async () => {
       if (!hasOAuthParams) {
         router.replace("/login");
-        return null;
+        return;
       }
 
       const nextSession = await completeRedirectLogin();
@@ -28,11 +32,8 @@ export default function AuthCallbackView() {
         router.replace("/claim-username");
       }
 
-      return nextSession;
-    },
-    enabled: isReady,
-    retry: false,
-  });
+    })();
+  }, [completeRedirectLogin, hasOAuthParams, isReady, router]);
 
   return (
     <MobileShell

@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 
-import type { RecommendationItem } from "../type/ai";
+import type { RecommendationItem } from "../types/ai.types";
 
 export function RecommendationCard({
   item,

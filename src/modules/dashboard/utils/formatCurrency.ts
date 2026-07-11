@@ -1,5 +1,5 @@
 import { currencyOptions } from "../constants/dashboard";
-import type { CurrencyCode } from "../type/dashboard";
+import type { CurrencyCode } from "../types/dashboard.types";
 
 export function formatCurrency(amountUsd: number, currency: CurrencyCode) {
   const option = currencyOptions[currency];

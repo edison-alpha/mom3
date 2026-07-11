@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import Image from "next/image";
 import * as React from "react";
 
-import type { Recipient } from "@/modules/send/type";
+import type { Recipient } from "@/modules/send/types/send.types";
 import { RecipientRow } from "@/modules/send/components/RecipientRow";
 
 export function RecipientSearch({

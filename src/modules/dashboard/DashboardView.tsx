@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 import { FloatingMenuButton } from "@/components/ui/menu-button";
 import { MobileShell } from "@/components/ui/mobile-shell";
-import { useMagic } from "@/providers/MagicProvider";
+import { useMagic } from "@/providers/magic/components/MagicProvider";
 import { fadeUp } from "./constants/dashboard";
 import { BalanceCard } from "./components/BalanceCard";
 import { DashboardHeader } from "./components/DashboardHeader";

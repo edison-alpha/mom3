@@ -5,14 +5,10 @@ import * as React from "react";
 
 import { MobilePageHeader, MobileShell } from "@/components/ui/mobile-shell";
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
-import { truncateAddress } from "@/lib/wallet-session";
+import { formatTokenBalance, formatUsd } from "@/lib/format";
+import { truncateAddress } from "@/utils/address.utils";
 import { useConfirmPaymentState } from "@/modules/send/hooks/useConfirmPaymentState";
-import {
-  formatTokenBalance,
-  formatUsd,
-  getFeeBreakdownRows,
-  getTotalFeeLabel,
-} from "@/modules/send/utils";
+import { getFeeBreakdownRows, getTotalFeeLabel } from "@/modules/send/utils/send.utils";
 
 export default function ConfirmPaymentView() {
   const state = useConfirmPaymentState();
@@ -72,7 +68,7 @@ export default function ConfirmPaymentView() {
                 ) : null}
               </div>
               <p className="mt-2 text-center text-sm font-medium text-[#9A9AA2]">
-                {state.recipient.name} • {truncateAddress(state.recipient.address, 5)}
+                {state.recipient.name} â€¢ {truncateAddress(state.recipient.address, 5)}
               </p>
             </>
           ) : (
@@ -93,7 +89,7 @@ export default function ConfirmPaymentView() {
           </div>
           {estimatedUsd !== null ? (
             <p className="mt-1 text-center text-sm font-semibold text-[#9A9AA2]">
-              ≈ {formatUsd(estimatedUsd)}
+              â‰ˆ {formatUsd(estimatedUsd)}
             </p>
           ) : null}
           <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-4 text-sm">

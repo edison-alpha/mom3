@@ -1,4 +1,4 @@
-import type { ChatMessage, RecommendationItem } from "../type/ai";
+import type { ChatMessage, RecommendationItem } from "../types/ai.types";
 
 export const recommendations: RecommendationItem[] = [
   {

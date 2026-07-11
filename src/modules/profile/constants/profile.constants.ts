@@ -1,4 +1,4 @@
-import type { ProfileActionRow, ProfileStat } from "@/modules/profile/type";
+import type { ProfileActionRow, ProfileStat } from "@/modules/profile/types/profile.types";
 
 export const profileStats: ProfileStat[] = [
   { label: "Score", value: "92", sub: "Trusted" },

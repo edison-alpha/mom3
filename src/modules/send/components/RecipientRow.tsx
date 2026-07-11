@@ -4,9 +4,9 @@ import { Icon } from "@iconify/react";
 import * as React from "react";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
-import { truncateAddress } from "@/lib/wallet-session";
+import { truncateAddress } from "@/utils/address.utils";
 import { cn } from "@/lib/utils";
-import type { Recipient } from "@/modules/send/type";
+import type { Recipient } from "@/modules/send/types/send.types";
 
 export function RecipientRow({
   recipient,
@@ -46,7 +46,7 @@ export function RecipientRow({
           ) : null}
         </span>
         <span className="mt-0.5 block truncate text-xs font-medium text-[#9A9AA2]">
-          {recipient.name} • {truncateAddress(recipient.address)}
+          {recipient.name} â€¢ {truncateAddress(recipient.address)}
         </span>
       </span>
       <span className="shrink-0 rounded-full bg-black/30 px-2.5 py-1 text-[10px] font-black text-[#9A9AA2]">

@@ -1,4 +1,4 @@
-import type { ChatMessage } from "../type/ai";
+import type { ChatMessage } from "../types/ai.types";
 
 export async function createAiReply(message: string): Promise<ChatMessage> {
   const normalized = message.toLowerCase();

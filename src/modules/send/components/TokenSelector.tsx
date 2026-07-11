@@ -4,8 +4,8 @@ import * as React from "react";
 
 import { TokenRowItem } from "@/modules/send/components/TokenRowItem";
 import { cn } from "@/lib/utils";
-import type { TokenRow } from "@/modules/send/type";
-import { formatUsd } from "@/modules/send/utils";
+import type { TokenRow } from "@/modules/send/types/send.types";
+import { formatUsd } from "@/lib/format";
 
 export function TokenSelector({
   tokenRows,

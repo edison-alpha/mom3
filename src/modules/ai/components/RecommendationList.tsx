@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
-import type { RecommendationItem } from "../type/ai";
+import type { RecommendationItem } from "../types/ai.types";
 import { RecommendationCard } from "./RecommendationCard";
 
 type RecommendationListProps = {

@@ -3,8 +3,8 @@
 import * as React from "react";
 
 import { TokenRowItem } from "@/modules/send/components/TokenRowItem";
-import type { TokenRow } from "@/modules/send/type";
-import { normalizeAssetQuery } from "@/modules/send/utils";
+import type { TokenRow } from "@/modules/send/types/send.types";
+import { normalizeAssetQuery } from "@/modules/send/utils/send.utils";
 
 function matchesToken(token: TokenRow, query: string) {
   const normalized = normalizeAssetQuery(query);

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowDown, ArrowUp, Eye, EyeOff, RefreshCw } from "lucide-react";
 
 import { quickActionLinks } from "../constants/dashboard";
-import type { QuickActionLink } from "../type/dashboard";
+import type { QuickActionLink } from "../types/dashboard.types";
 import { cn } from "@/lib/utils";
 
 type BalanceCardProps = {

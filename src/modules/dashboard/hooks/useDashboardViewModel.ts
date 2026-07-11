@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 
 import { portfolioModes } from "../constants/dashboard";
-import type { CurrencyCode } from "../type/dashboard";
+import type { CurrencyCode } from "../types/dashboard.types";
 import { formatCurrency } from "../utils/formatCurrency";
-import { useUniversalAccount } from "@/providers/UniversalAccountProvider";
+import { useUniversalAccount } from "@/providers/universal-account/components/UniversalAccountProvider";
 
 export function useDashboardViewModel() {
   const {

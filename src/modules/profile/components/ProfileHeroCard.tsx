@@ -4,8 +4,8 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
-import { profileSectionVariants } from "@/modules/profile/constants";
-import type { ProfileStat } from "@/modules/profile/type";
+import { profileSectionVariants } from "@/modules/profile/constants/profile.constants";
+import type { ProfileStat } from "@/modules/profile/types/profile.types";
 
 type ProfileHeroCardProps = {
   email: string | null;

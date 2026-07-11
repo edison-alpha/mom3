@@ -2,8 +2,8 @@
 
 import { Icon } from "@iconify/react";
 
-import type { TokenRow } from "@/modules/send/type";
-import { chainBadgeIconFromId } from "@/modules/send/utils";
+import type { TokenRow } from "@/modules/send/types/send.types";
+import { chainBadgeIconFromId } from "@/lib/chain";
 
 export function TokenAssetBadge({ token }: { token: TokenRow }) {
   return (

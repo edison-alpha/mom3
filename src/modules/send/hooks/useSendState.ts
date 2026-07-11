@@ -2,18 +2,14 @@
 
 import * as React from "react";
 
-import { useUniversalAccount } from "@/providers/UniversalAccountProvider";
-import { parseDecimalish } from "@/lib/format";
+import { useUniversalAccount } from "@/providers/universal-account/components/UniversalAccountProvider";
 import {
-  receiveTokenTemplates,
   recentRecipients,
   addressBook,
   scannedRecipient,
-  ZERO_ADDRESS,
-} from "@/modules/send/constants";
-import type { Recipient, TokenRow } from "@/modules/send/type";
+} from "@/modules/send/constants/send.constants";
+import type { Recipient, TokenRow } from "@/modules/send/types/send.types";
 import {
-  chainNameFromId,
   findPreferredToken,
   getAmountValidationMessage,
   matchesAsset,
@@ -21,8 +17,8 @@ import {
   normalizeAssetQuery,
   resolveRecipient,
   sanitizeAmountInput,
-  tokenIcon,
-} from "@/modules/send/utils";
+  normalizePrimaryAssetTokens,
+} from "@/modules/send/utils/send.utils";
 
 export function useSendState(
   initialTo: string,
@@ -47,51 +43,12 @@ export function useSendState(
   const [error, setError] = React.useState<string | null>(null);
   const appliedInitialAsset = React.useRef<string | null>(null);
 
-  /* ── Derived token rows ─────────────────────────────────── */
+  /* â”€â”€ Derived token rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-  const tokenRows = React.useMemo<TokenRow[]>(() => {
-    const assets = primaryAssets?.assets ?? [];
-    const rowsById = new Map<string, TokenRow>();
-
-    receiveTokenTemplates.forEach((token) => {
-      const id = `${token.chainId}-${token.tokenAddress.toLowerCase()}-${token.symbol}`;
-      rowsById.set(id, { ...token, id, balance: 0, amountInUSD: 0 });
-    });
-
-    assets
-      .flatMap((assetItem) => {
-        const tokenType = String(assetItem.tokenType || "TOKEN").toUpperCase();
-        return assetItem.chainAggregation.map((entry) => {
-          const tokenSymbol = String(entry.token.symbol || tokenType).toUpperCase();
-          const chainId = Number(entry.token.chainId ?? 0);
-          const balance = parseDecimalish(entry.amount, Number(entry.token.realDecimals ?? entry.token.decimals ?? 18));
-          const amountInUSD = parseDecimalish(entry.amountInUSD);
-          const tokenAddress = String(entry.token.address ?? ZERO_ADDRESS);
-
-          return {
-            id: `${chainId}-${tokenAddress.toLowerCase()}-${tokenSymbol}`,
-            symbol: tokenSymbol,
-            name: String(entry.token.name || tokenSymbol),
-            balance,
-            amountInUSD,
-            icon: tokenIcon(tokenSymbol),
-            chainName: chainNameFromId(chainId),
-            chainId,
-            tokenAddress,
-          };
-        });
-      })
-      .forEach((token) => rowsById.set(token.id, token));
-
-    return Array.from(rowsById.values()).sort((left, right) => {
-      if (right.amountInUSD !== left.amountInUSD) return right.amountInUSD - left.amountInUSD;
-      if (right.balance !== left.balance) return right.balance - left.balance;
-      if (Number(Boolean(left.isSuggested)) !== Number(Boolean(right.isSuggested))) {
-        return Number(Boolean(left.isSuggested)) - Number(Boolean(right.isSuggested));
-      }
-      return left.symbol.localeCompare(right.symbol);
-    });
-  }, [primaryAssets]);
+  const tokenRows = React.useMemo(
+    () => normalizePrimaryAssetTokens(primaryAssets, true),
+    [primaryAssets],
+  );
 
   const totalPrimaryAssetsInUSD =
     primaryAssets && "totalAmountInUSD" in primaryAssets
@@ -112,7 +69,7 @@ export function useSendState(
     selectedToken && initialAsset && matchesAsset(selectedToken, initialAsset, initialChain),
   );
 
-  /* ── Effects ────────────────────────────────────────────── */
+  /* â”€â”€ Effects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
   React.useEffect(() => {
     if (!initialTo) return;
@@ -149,7 +106,7 @@ export function useSendState(
     return () => window.removeEventListener("keydown", handleEscape);
   }, [scanOpen]);
 
-  /* ── Filtered recipients ────────────────────────────────── */
+  /* â”€â”€ Filtered recipients â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
   const filteredRecipients = React.useMemo(() => {
     if (!query.trim()) return recentRecipients;
@@ -168,7 +125,7 @@ export function useSendState(
 
   const showRecentLabel = !query.trim() && recentRecipients.length > 0;
 
-  /* ── Actions ────────────────────────────────────────────── */
+  /* â”€â”€ Actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
   const resetCompose = () => {
     setSelectedRecipient(null);

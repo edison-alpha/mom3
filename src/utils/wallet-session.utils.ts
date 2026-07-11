@@ -1,12 +1,4 @@
-export type Mom3AuthProvider = "google" | "apple" | "email" | "unknown";
-
-export type Mom3WalletSession = {
-  token: string;
-  ownerAddress: string;
-  email?: string;
-  issuer?: string;
-  provider: Mom3AuthProvider;
-};
+import type { Mom3WalletSession } from "@/types/wallet.types";
 
 const SESSION_KEY = "mom3-wallet-session";
 
@@ -33,10 +25,4 @@ export function clearWalletSession() {
   window.localStorage.removeItem("token");
   window.localStorage.removeItem("user");
   window.localStorage.removeItem("loginMethod");
-}
-
-export function truncateAddress(address: string, chars = 4) {
-  if (!address) return "";
-  if (address.length <= chars * 2 + 3) return address;
-  return `${address.slice(0, chars)}...${address.slice(-chars)}`;
 }

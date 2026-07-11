@@ -7,6 +7,23 @@ export function formatCompact(n: number): string {
   }).format(n);
 }
 
+export function formatTokenBalance(balance: number): string {
+  if (balance === 0) return "0.00";
+  if (balance >= 1) return balance.toFixed(4).replace(/\.?(0+)$/, "");
+  return balance.toFixed(6).replace(/\.?(0+)$/, "");
+}
+
+export function formatUsd(value: number): string {
+  if (!Number.isFinite(value)) return "$0.00";
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: value > 0 && value < 0.01 ? 4 : 2,
+    maximumFractionDigits: value > 0 && value < 0.01 ? 6 : 2,
+  }).format(value);
+}
+
 export function parseDecimalish(value: string | number | bigint | null | undefined, decimals = 18) {
   if (value === null || value === undefined || value === "") return 0;
 
@@ -41,4 +58,8 @@ export function parseDecimalish(value: string | number | bigint | null | undefin
 
   const parsed = Number(trimmed);
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+export function formatUsdValue(value: string | number | null | undefined): string {
+  return formatUsd(parseDecimalish(value));
 }

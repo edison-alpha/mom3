@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { createAiReply } from "../utils/api";
 import { initialMessages } from "../constants/ai";
-import type { ChatMessage } from "../type/ai";
+import type { ChatMessage } from "../types/ai.types";
 
 export function useAiChat() {
   const [messages, setMessages] = React.useState<ChatMessage[]>(initialMessages);

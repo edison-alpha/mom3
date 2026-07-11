@@ -5,7 +5,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { useMagic } from "@/providers/MagicProvider";
+import { useMagic } from "@/providers/magic/components/MagicProvider";
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
 
 const MenuButton = React.forwardRef<

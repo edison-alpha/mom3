@@ -1,16 +1,18 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import * as React from "react";
 
-import { truncateAddress } from "@/lib/wallet-session";
-import { useMagic } from "@/providers/MagicProvider";
-import { useUniversalAccount } from "@/providers/UniversalAccountProvider";
+import { formatUsd } from "@/lib/format";
+import { truncateAddress } from "@/utils/address.utils";
+import { useMagic } from "@/providers/magic/components/MagicProvider";
+import { useUniversalAccount } from "@/providers/universal-account/components/UniversalAccountProvider";
 import type {
   ProfileIdentityRow,
   UniversalAccountRow,
-} from "@/modules/profile/type";
+} from "@/modules/profile/types/profile.types";
 
 export function useProfileViewModel() {
   const router = useRouter();
@@ -28,15 +30,11 @@ export function useProfileViewModel() {
   const [copiedAddress, setCopiedAddress] = React.useState<string | null>(null);
   const [universalAccountOpen, setUniversalAccountOpen] = React.useState(false);
 
-  useQuery({
-    queryKey: ["profile", "missing-session", session?.ownerAddress || "anonymous"],
-    queryFn: async () => {
+  useEffect(() => {
+    if (!isMagicLoading && !session?.ownerAddress) {
       router.replace("/login");
-      return true;
-    },
-    enabled: !isMagicLoading && !session?.ownerAddress,
-    staleTime: Infinity,
-  });
+    }
+  }, [isMagicLoading, router, session?.ownerAddress]);
 
   const delegateMutation = useMutation({
     mutationFn: async () => {
@@ -56,7 +54,7 @@ export function useProfileViewModel() {
     {
       icon: "solar:wallet-money-bold",
       label: "Universal Balance",
-      value: isUniversalAccountLoading ? "Loading" : `$${totalUsd.toFixed(2)}`,
+      value: isUniversalAccountLoading ? "Loading" : formatUsd(totalUsd),
     },
     {
       icon: "solar:shield-check-bold",

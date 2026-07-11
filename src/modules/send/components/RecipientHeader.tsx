@@ -4,8 +4,8 @@ import { Icon } from "@iconify/react";
 import * as React from "react";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
-import { truncateAddress } from "@/lib/wallet-session";
-import type { Recipient } from "@/modules/send/type";
+import { truncateAddress } from "@/utils/address.utils";
+import type { Recipient } from "@/modules/send/types/send.types";
 
 export function RecipientHeader({ recipient }: { recipient: Recipient }) {
   return (
@@ -31,7 +31,7 @@ export function RecipientHeader({ recipient }: { recipient: Recipient }) {
         ) : null}
       </div>
       <p className="mt-2 text-center text-sm font-medium text-[#9A9AA2]">
-        {recipient.name} • {truncateAddress(recipient.address, 5)}
+        {recipient.name} â€¢ {truncateAddress(recipient.address, 5)}
       </p>
     </div>
   );

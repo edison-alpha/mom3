@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react";
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
 import { cn } from "@/lib/utils";
 import { currencyOptions } from "../constants/dashboard";
-import type { CurrencyCode } from "../type/dashboard";
+import type { CurrencyCode } from "../types/dashboard.types";
 
 type DashboardHeaderProps = {
   currency: CurrencyCode;

@@ -5,7 +5,7 @@ import type {
   OpportunityCard,
   PortfolioMode,
   QuickActionLink,
-} from "../type/dashboard";
+} from "../types/dashboard.types";
 
 export const avatarStackColors = [
   "bg-[#ccff00]",

@@ -2,8 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { TokenAssetBadge } from "@/modules/send/components/TokenAssetBadge";
-import type { TokenRow } from "@/modules/send/type";
-import { formatTokenBalance, formatUsd } from "@/modules/send/utils";
+import type { TokenRow } from "@/modules/send/types/send.types";
+import { formatTokenBalance, formatUsd } from "@/lib/format";
 
 export function TokenRowItem({
   token,

@@ -4,8 +4,8 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import { profileSectionVariants } from "@/modules/profile/constants";
-import type { ProfileActionRow } from "@/modules/profile/type";
+import { profileSectionVariants } from "@/modules/profile/constants/profile.constants";
+import type { ProfileActionRow } from "@/modules/profile/types/profile.types";
 
 type ProfileActionListProps = {
   rows: ProfileActionRow[];

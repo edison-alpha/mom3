@@ -3,7 +3,7 @@
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
-import { profileSectionVariants } from "@/modules/profile/constants";
+import { profileSectionVariants } from "@/modules/profile/constants/profile.constants";
 
 type ProfileLogoutButtonProps = {
   onLogout: () => void;

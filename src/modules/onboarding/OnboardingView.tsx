@@ -1,11 +1,11 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { MobileShell } from "@/components/ui/mobile-shell";
-import { useMagic } from "@/providers/MagicProvider";
+import { useMagic } from "@/providers/magic/components/MagicProvider";
 
 function FloatingShape({
   className,
@@ -30,15 +30,11 @@ export default function OnboardingView() {
     session,
   } = useMagic();
 
-  useQuery({
-    queryKey: ["login", "existing-session", session?.ownerAddress],
-    queryFn: async () => {
+  useEffect(() => {
+    if (session?.ownerAddress) {
       router.replace("/claim-username");
-      return true;
-    },
-    enabled: Boolean(session?.ownerAddress),
-    staleTime: Infinity,
-  });
+    }
+  }, [router, session?.ownerAddress]);
 
   return (
     <MobileShell

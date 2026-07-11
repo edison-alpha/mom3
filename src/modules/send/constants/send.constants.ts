@@ -1,7 +1,7 @@
 import { CHAIN_ID } from "@particle-network/universal-account-sdk";
 
 import { historyItems } from "@/lib/history";
-import type { Recipient, TokenRow } from "@/modules/send/type";
+import type { Recipient, TokenRow } from "@/modules/send/types/send.types";
 
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 

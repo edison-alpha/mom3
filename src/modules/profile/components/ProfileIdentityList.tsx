@@ -3,8 +3,8 @@
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
-import { profileSectionVariants } from "@/modules/profile/constants";
-import type { ProfileIdentityRow } from "@/modules/profile/type";
+import { profileSectionVariants } from "@/modules/profile/constants/profile.constants";
+import type { ProfileIdentityRow } from "@/modules/profile/types/profile.types";
 import { UniversalAccountOwnerRow } from "@/modules/profile/components/UniversalAccountSheet";
 
 type ProfileIdentityListProps = {

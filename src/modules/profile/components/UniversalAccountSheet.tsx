@@ -4,8 +4,8 @@ import { Icon } from "@iconify/react";
 import * as React from "react";
 
 import { BottomSheet } from "@/components/ui/bottom-sheet";
-import { truncateAddress } from "@/lib/wallet-session";
-import type { UniversalAccountRow } from "@/modules/profile/type";
+import { truncateAddress } from "@/utils/address.utils";
+import type { UniversalAccountRow } from "@/modules/profile/types/profile.types";
 
 type UniversalAccountHeaderButtonProps = {
   ownerAddress: string;

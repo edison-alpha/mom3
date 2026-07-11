@@ -6,7 +6,7 @@ import { MobilePageHeader, MobileShell } from "@/components/ui/mobile-shell";
 import {
   profileActionRows,
   profileStats,
-} from "@/modules/profile/constants";
+} from "@/modules/profile/constants/profile.constants";
 import { ProfileActionList } from "@/modules/profile/components/ProfileActionList";
 import { ProfileHeroCard } from "@/modules/profile/components/ProfileHeroCard";
 import { ProfileIdentityList } from "@/modules/profile/components/ProfileIdentityList";

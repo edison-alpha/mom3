@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 
 import { portfolioModes } from "../constants/dashboard";
-import type { PortfolioMode } from "../type/dashboard";
+import type { PortfolioMode } from "../types/dashboard.types";
 import { cn } from "@/lib/utils";
 import { DegenDogeIcon } from "./DegenDogeIcon";
 
