@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
@@ -28,7 +28,7 @@ export function SendPreviewCard({
     <section className="mt-4 rounded-[24px] border border-[#ccff00]/20 bg-[#ccff00]/[0.04] p-4">
       <div className="flex items-start gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#ccff00]/15 text-[#ccff00]">
-          <Icon icon="lucide:receipt-text" aria-hidden="true" width={19} height={19} />
+          <AppIcon icon="lucide:receipt-text" aria-hidden="true" width={19} height={19} />
         </span>
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-black text-white">Review before signing</h3>
@@ -49,7 +49,7 @@ export function SendPreviewCard({
           <dt className="text-[#9A9AA2]">To</dt>
           <dd className="flex items-center justify-end gap-2 text-right font-mono text-xs font-bold tabular-nums text-white">
             <span>
-              {sendPreview.recipient.handle} Â· {truncateAddress(sendPreview.recipient.address, 5)}
+              {sendPreview.recipient.handle} Ã‚Â· {truncateAddress(sendPreview.recipient.address, 5)}
             </span>
             <WalletAvatar
               address={sendPreview.recipient.address}
@@ -89,7 +89,7 @@ export function SendPreviewCard({
         aria-busy={isSigning ? "true" : undefined}
         className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#ccff00] text-sm font-black text-[#3B33BD] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/70 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        <Icon
+        <AppIcon
           icon={isSigning ? "lucide:loader-circle" : "lucide:send"}
           aria-hidden="true"
           width={18}

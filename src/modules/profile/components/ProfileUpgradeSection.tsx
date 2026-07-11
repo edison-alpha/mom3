@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 
 import { profileSectionVariants } from "@/modules/profile/constants/profile.constants";
@@ -40,7 +40,7 @@ export function ProfileUpgradeSection({
         aria-busy={isPending}
         className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#ccff00] text-base font-black text-[#3B33BD] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/70 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        <Icon
+        <AppIcon
           icon={isPending ? "lucide:loader-circle" : "solar:shield-check-bold"}
           aria-hidden="true"
           width={20}

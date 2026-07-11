@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 
 import { MobilePageHeader, MobileShell } from "@/components/ui/mobile-shell";
@@ -37,7 +37,7 @@ export default function ConfirmPaymentView() {
             className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
             aria-label="Back to send"
           >
-            <Icon icon="lucide:chevron-left" aria-hidden="true" width={28} height={28} />
+            <AppIcon icon="lucide:chevron-left" aria-hidden="true" width={28} height={28} />
           </button>
         }
       />
@@ -58,7 +58,7 @@ export default function ConfirmPaymentView() {
               <div className="mt-4 flex items-center justify-center gap-2">
                 <h2 className="text-2xl font-black tracking-tight text-white">{state.recipient.handle}</h2>
                 {state.recipient.status === "Verified" ? (
-                  <Icon
+                  <AppIcon
                     icon="material-symbols:verified-rounded"
                     aria-hidden="true"
                     width={22}
@@ -68,7 +68,7 @@ export default function ConfirmPaymentView() {
                 ) : null}
               </div>
               <p className="mt-2 text-center text-sm font-medium text-[#9A9AA2]">
-                {state.recipient.name} â€¢ {truncateAddress(state.recipient.address, 5)}
+                {state.recipient.name} Ã¢â‚¬Â¢ {truncateAddress(state.recipient.address, 5)}
               </p>
             </>
           ) : (
@@ -89,7 +89,7 @@ export default function ConfirmPaymentView() {
           </div>
           {estimatedUsd !== null ? (
             <p className="mt-1 text-center text-sm font-semibold text-[#9A9AA2]">
-              â‰ˆ {formatUsd(estimatedUsd)}
+              Ã¢â€°Ë† {formatUsd(estimatedUsd)}
             </p>
           ) : null}
           <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-4 text-sm">
@@ -110,7 +110,7 @@ export default function ConfirmPaymentView() {
 
           {!state.sendPreview || state.isPreparing ? (
             <div className="mt-4 flex items-center justify-center gap-2 text-sm font-semibold text-[#9A9AA2]">
-              <Icon icon="lucide:loader-circle" aria-hidden="true" width={18} height={18} className="animate-spin" />
+              <AppIcon icon="lucide:loader-circle" aria-hidden="true" width={18} height={18} className="animate-spin" />
               Preparing preview...
             </div>
           ) : (
@@ -178,7 +178,7 @@ export default function ConfirmPaymentView() {
             disabled={!state.isReady || state.isPreparing || state.isSigning || Boolean(state.transactionId)}
             className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-[#ccff00] text-base font-black text-[#3B33BD] shadow-[0_10px_28px_-10px_rgba(204,255,0,0.5)] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/70 disabled:cursor-not-allowed disabled:bg-[#2A2A3E] disabled:text-[#77777f]"
           >
-            <Icon
+            <AppIcon
               icon={state.isSigning ? "lucide:loader-circle" : "lucide:check-circle"}
               aria-hidden="true"
               width={20}

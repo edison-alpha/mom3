@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 
@@ -43,7 +43,7 @@ export default function AuthCallbackView() {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,#201B8F_0%,#3B33BD_42%,#6F7CFF_100%)]" />
       <div className="relative z-10 flex flex-col items-center">
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#12111A] text-[#ccff00] shadow-[0_16px_42px_-24px_rgba(14,18,58,0.8)]">
-          <Icon
+          <AppIcon
             icon="lucide:loader-circle"
             aria-hidden="true"
             width={26}

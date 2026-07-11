@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
@@ -36,7 +36,7 @@ export function RecipientRow({
         <span className="flex items-center gap-2">
           <span className="truncate text-sm font-bold text-white">{recipient.handle}</span>
           {recipient.status === "Verified" ? (
-            <Icon
+            <AppIcon
               icon="material-symbols:verified-rounded"
               aria-hidden="true"
               width={16}
@@ -46,7 +46,7 @@ export function RecipientRow({
           ) : null}
         </span>
         <span className="mt-0.5 block truncate text-xs font-medium text-[#9A9AA2]">
-          {recipient.name} â€¢ {truncateAddress(recipient.address)}
+          {recipient.name} Ã¢â‚¬Â¢ {truncateAddress(recipient.address)}
         </span>
       </span>
       <span className="shrink-0 rounded-full bg-black/30 px-2.5 py-1 text-[10px] font-black text-[#9A9AA2]">

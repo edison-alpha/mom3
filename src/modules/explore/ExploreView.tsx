@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import * as React from "react";
@@ -264,7 +264,7 @@ function MarketList({
     >
       <h2 className="flex items-center gap-1 text-base font-semibold text-white">
         {title}
-        <Icon
+        <AppIcon
           icon="lucide:chevron-right"
           aria-hidden="true"
           width={17}
@@ -288,7 +288,7 @@ function MarketList({
               )}
             >
               <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${item.color}`}>
-                <Icon
+                <AppIcon
                   icon={item.icon}
                   aria-hidden="true"
                   width={24}
@@ -346,7 +346,7 @@ function MarketDetail({
     >
       <div className="flex items-start gap-3">
         <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${market.color}`}>
-          <Icon
+          <AppIcon
             icon={market.icon}
             aria-hidden="true"
             width={28}
@@ -417,7 +417,7 @@ function MarketDetail({
           aria-label="Ask agent about market"
           className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[#ccff00] transition-colors hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
         >
-          <Icon icon="solar:stars-bold" aria-hidden="true" width={20} height={20} />
+          <AppIcon icon="solar:stars-bold" aria-hidden="true" width={20} height={20} />
         </Link>
       </div>
     </motion.section>
@@ -474,7 +474,7 @@ export default function ExploreView() {
       aria-expanded={filterSheetOpen}
       aria-haspopup="dialog"
     >
-      <Icon icon="lucide:sliders-horizontal" aria-hidden="true" width={18} height={18} />
+      <AppIcon icon="lucide:sliders-horizontal" aria-hidden="true" width={18} height={18} />
     </button>
   );
 
@@ -492,7 +492,7 @@ export default function ExploreView() {
               Search lending markets
             </label>
             <div className="flex h-14 w-full items-center gap-3 rounded-full bg-[#1C1C1E]/90 px-5 shadow-[0_16px_34px_-18px_rgba(0,0,0,0.95)] backdrop-blur-md">
-              <Icon
+              <AppIcon
                 icon="icon-park-outline:search"
                 aria-hidden="true"
                 width={24}
@@ -548,7 +548,7 @@ export default function ExploreView() {
                       item.iconClassName,
                     )}
                   >
-                    <Icon icon={item.icon} aria-hidden="true" width={25} height={25} />
+                    <AppIcon icon={item.icon} aria-hidden="true" width={25} height={25} />
                   </span>
                   <span
                     className={cn(
@@ -556,7 +556,7 @@ export default function ExploreView() {
                       item.actionClassName,
                     )}
                   >
-                    <Icon icon="lucide:arrow-right" aria-hidden="true" width={22} height={22} />
+                    <AppIcon icon="lucide:arrow-right" aria-hidden="true" width={22} height={22} />
                   </span>
                 </div>
                 <h2 className="mt-5 text-base font-bold text-white">{item.title}</h2>
@@ -600,7 +600,7 @@ export default function ExploreView() {
             transition={{ duration: 0.25 }}
             className="mt-8 flex flex-col items-center justify-center rounded-[28px] bg-[#151714] px-6 py-12 text-center"
           >
-            <Icon
+            <AppIcon
               icon="icon-park-outline:search"
               aria-hidden="true"
               width={40}
@@ -641,7 +641,7 @@ export default function ExploreView() {
                 )}
               >
                 <span className="min-w-0 flex items-center gap-3">
-                  <Icon
+                  <AppIcon
                     icon={filter.icon}
                     aria-hidden="true"
                     width={19}
@@ -651,7 +651,7 @@ export default function ExploreView() {
                   <span className="truncate text-sm font-bold">{filter.label}</span>
                 </span>
                 {isActive ? (
-                  <Icon
+                  <AppIcon
                     icon="material-symbols:check-rounded"
                     aria-hidden="true"
                     width={20}

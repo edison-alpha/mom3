@@ -1,10 +1,10 @@
 'use client';
 
-import { Icon } from '@iconify/react';
+import { AppIcon } from "@/components/ui/app-icon";
+import { WalletAvatar } from "@/components/ui/wallet-avatar";
 import { motion } from 'framer-motion';
 import {
   Check,
-  ChevronRight,
   Lock,
   ShieldCheck,
   Type as TypeIcon,
@@ -13,6 +13,8 @@ import {
 
 interface ChooseHandleProps {
   handleValue: string;
+  ownerAddress?: string;
+  avatarFallback?: string;
   onHandleChange: (value: string) => void;
   onContinue: () => void;
 }
@@ -20,7 +22,7 @@ interface ChooseHandleProps {
 const rules = [
   {
     Icon: TypeIcon,
-    title: '3–20 characters',
+    title: '3-20 characters',
     description: 'Use letters, numbers, and underscores',
   },
   {
@@ -41,6 +43,8 @@ const rules = [
 
 export default function ChooseHandle({
   handleValue,
+  ownerAddress,
+  avatarFallback,
   onHandleChange,
   onContinue,
 }: ChooseHandleProps) {
@@ -60,10 +64,16 @@ export default function ChooseHandle({
       {/* Hero illustration */}
       <div className="flex flex-col items-center mb-5">
         <div className="relative mb-3">
-          <div className="w-20 h-20 bg-gradient-to-br from-[#3B33BD] to-[#2E279A] rounded-full flex items-center justify-center relative">
-            <span className="text-4xl">👾</span>
+          <div className="relative flex h-20 w-20 items-center justify-center">
+            <WalletAvatar
+              address={ownerAddress}
+              fallback={avatarFallback}
+              label="Profile"
+              size="xl"
+              className="h-20 w-20 ring-2 ring-[#3B33BD]"
+            />
             <div className="absolute -top-1 -right-1">
-              <Icon
+              <AppIcon
                 icon="material-symbols:verified-rounded"
                 aria-hidden="true"
                 width={20}
@@ -120,7 +130,7 @@ export default function ChooseHandle({
           >
             {isValid
               ? `@${handleValue} is available`
-              : '3–20 characters, letters, numbers, underscores only'}
+              : '3-20 characters, letters, numbers, underscores only'}
           </motion.p>
         )}
       </div>
@@ -143,21 +153,6 @@ export default function ChooseHandle({
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Preview */}
-      <div className="mb-5">
-        <h3 className="text-sm font-semibold text-white mb-2">Preview</h3>
-        <div className="bg-[#1C1C1E] rounded-2xl p-3 border border-[#2A2A3E] flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#3B33BD] to-[#2E279A] rounded-full flex items-center justify-center">
-            <span className="text-xl">👾</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-bold text-white">@{handleValue || 'yourhandle'}</p>
-            <p className="text-xs text-[#9A9AA2]">This is how others will see you<br />on mom3.</p>
-          </div>
-          <ChevronRight className="w-5 h-5 text-[#9A9AA2] shrink-0" aria-hidden="true" />
         </div>
       </div>
 

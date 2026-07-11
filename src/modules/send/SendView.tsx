@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
@@ -53,7 +53,7 @@ export default function SendView() {
             Search coins
           </label>
           <div className="flex h-14 w-full items-center gap-3 rounded-full bg-[#1C1C1E]/90 px-5 shadow-[0_16px_34px_-18px_rgba(0,0,0,0.95)] backdrop-blur-md">
-            <Icon
+            <AppIcon
               icon="icon-park-outline:search"
               aria-hidden="true"
               width={24}
@@ -86,7 +86,7 @@ export default function SendView() {
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
               aria-label="Go back"
             >
-              <Icon icon="lucide:chevron-left" aria-hidden="true" width={28} height={28} />
+              <AppIcon icon="lucide:chevron-left" aria-hidden="true" width={28} height={28} />
             </button>
           ) : (
             <Link
@@ -94,7 +94,7 @@ export default function SendView() {
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
               aria-label="Back to assets"
             >
-              <Icon icon="lucide:chevron-left" aria-hidden="true" width={28} height={28} />
+              <AppIcon icon="lucide:chevron-left" aria-hidden="true" width={28} height={28} />
             </Link>
           )
         }
@@ -156,7 +156,7 @@ export default function SendView() {
                 disabled={!state.canSend || state.isLoading}
                 className="mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-[#3B33BD] text-base font-black text-[#ccff00] transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#3B33BD] disabled:cursor-not-allowed disabled:bg-[#2A2A3E] disabled:text-[#77777f]"
               >
-                <Icon icon="lucide:send" aria-hidden="true" width={20} height={20} />
+                <AppIcon icon="lucide:send" aria-hidden="true" width={20} height={20} />
                 Send
               </button>
             </form>

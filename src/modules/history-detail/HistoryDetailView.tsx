@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 import { MobilePageHeader, MobileShell } from "@/components/ui/mobile-shell";
 import { historyTabs, type HistoryItem } from "@/lib/history";
@@ -31,7 +31,7 @@ export default function HistoryDetailView({ item }: { item: HistoryItem }) {
               toneClassName[item.tone]
             )}
           >
-            <Icon icon={item.icon} aria-hidden="true" width={30} height={30} />
+            <AppIcon icon={item.icon} aria-hidden="true" width={30} height={30} />
           </span>
           <p className="mt-4 text-sm font-semibold text-[#9A9AA2]">
             {tabLabel} history

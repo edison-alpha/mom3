@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import * as React from "react";
@@ -295,9 +295,9 @@ const riskClassName: Record<Risk, string> = {
 function PositionIcon({ position }: { position: Position }) {
   return (
     <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
-      <Icon icon={position.icon} className="h-7 w-7" aria-hidden="true" />
+      <AppIcon icon={position.icon} className="h-7 w-7" aria-hidden="true" />
       <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border border-[#1F1F21] bg-[#111113]">
-        <Icon
+        <AppIcon
           icon={position.protocolIcon}
           className={cn("h-3.5 w-3.5", position.protocolTone)}
           aria-hidden="true"
@@ -322,7 +322,7 @@ function AssetDetailPanel({
     <section className="rounded-[24px] border border-white/10 bg-[#111217] p-4">
       <div className="flex items-start gap-3">
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
-          <Icon icon={asset.icon} className="h-8 w-8" aria-hidden="true" />
+          <AppIcon icon={asset.icon} className="h-8 w-8" aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">
@@ -560,7 +560,7 @@ export default function AssetsView() {
                   action.className,
                 )}
               >
-                <Icon icon={action.icon} className="h-5 w-5" aria-hidden="true" />
+                <AppIcon icon={action.icon} className="h-5 w-5" aria-hidden="true" />
               </span>
               <span className="text-sm font-semibold text-white">{action.label}</span>
             </Link>
@@ -609,7 +609,7 @@ export default function AssetsView() {
                       className="flex min-h-[76px] w-full items-center gap-3 border-b border-white/[0.06] px-4 py-3 text-left last:border-b-0 transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
                     >
                       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
-                        <Icon icon={asset.icon} className="h-7 w-7" aria-hidden="true" />
+                        <AppIcon icon={asset.icon} className="h-7 w-7" aria-hidden="true" />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-base font-bold text-white">
@@ -710,7 +710,7 @@ export default function AssetsView() {
                     <p className="mt-1 text-2xl font-black text-[#ccff00]">86</p>
                   </div>
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ccff00]/10 text-[#ccff00]">
-                    <Icon icon="solar:shield-check-bold" className="h-6 w-6" aria-hidden="true" />
+                    <AppIcon icon="solar:shield-check-bold" className="h-6 w-6" aria-hidden="true" />
                   </span>
                 </div>
                 <p className="mt-3 text-xs font-medium leading-relaxed text-[#A7A7B7]">
@@ -754,7 +754,7 @@ export default function AssetsView() {
           className="mt-5 flex h-14 items-center justify-center rounded-full bg-[#ccff00] px-5 text-base font-black text-[#3B33BD] transition-transform active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#ccff00]/70"
         >
           {cta.label}
-          <Icon icon={cta.icon} className="ml-2 h-5 w-5" aria-hidden="true" />
+          <AppIcon icon={cta.icon} className="ml-2 h-5 w-5" aria-hidden="true" />
         </Link>
     </MobileShell>
   );

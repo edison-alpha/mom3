@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 
 import { cn } from "@/lib/utils";
 
@@ -23,7 +23,7 @@ export function ChatBubble({ content, isUser, time = "10:30 AM" }: ChatBubblePro
         {isUser ? (
           <span className="mt-2 flex items-center justify-end gap-1 text-xs text-[#9A9AA2]">
             {time}
-            <Icon
+            <AppIcon
               icon="solar:check-read-bold"
               aria-hidden="true"
               width={16}

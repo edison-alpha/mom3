@@ -5,11 +5,12 @@ import {
   SkeletonPageHeader,
   SkeletonText,
 } from "@/components/ui/skeleton";
+import { FloatingMenuButton } from "@/components/ui/menu-button";
 import { MobileShell } from "@/components/ui/mobile-shell";
 
 export function DashboardSkeleton() {
   return (
-    <MobileShell>
+    <MobileShell bottomSlot={<FloatingMenuButton activeHref="/dashboard" />}>
       <SkeletonPageHeader hasAction />
 
       <section className="mt-4 rounded-[28px] bg-[#111217] p-4">

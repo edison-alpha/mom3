@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
@@ -39,7 +39,7 @@ export function ProfileHeroCard({
         />
         <div className="mt-3 flex items-center justify-center gap-1.5">
           <h2 className="text-xl font-black tracking-tight text-white">@ubayy</h2>
-          <Icon
+          <AppIcon
             icon="material-symbols:verified-rounded"
             aria-hidden="true"
             width={20}

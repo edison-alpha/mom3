@@ -4,12 +4,14 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, CircleHelp } from 'lucide-react';
 import { MobileShell } from '@/components/ui/mobile-shell';
+import { useMagic } from '@/providers/magic/components/MagicProvider';
 import StepIndicator from "./components/step-indicator";
 import ChooseHandle from "./components/choose-handle";
 import ConfirmHandle from "./components/confirm-handle";
 import CompleteView from "./components/complete-view";
 
 export default function ClaimUsernameView() {
+  const { session } = useMagic();
   const [step, setStep] = useState(1);
   const [handle, setHandle] = useState('ubayy');
 
@@ -76,6 +78,8 @@ export default function ClaimUsernameView() {
               <ChooseHandle
                 key="choose"
                 handleValue={handle}
+                ownerAddress={session?.ownerAddress}
+                avatarFallback={session?.email}
                 onHandleChange={setHandle}
                 onContinue={handleContinue}
               />
@@ -92,6 +96,8 @@ export default function ClaimUsernameView() {
               <CompleteView
                 key="complete"
                 handleValue={handle}
+                ownerAddress={session?.ownerAddress}
+                avatarFallback={session?.email}
                 onViewProfile={handleViewProfile}
                 onShare={handleShare}
               />

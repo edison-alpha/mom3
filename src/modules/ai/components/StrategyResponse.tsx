@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Link from "next/link";
 
 import { BrandCard } from "@/components/ui/brand-card";
@@ -8,7 +8,7 @@ export function StrategyResponse() {
   return (
     <BrandCard tone="accent" className="p-3">
       <div className="flex items-center gap-2 text-sm font-medium text-white">
-        <Icon
+        <AppIcon
           icon="solar:stars-bold"
           aria-hidden="true"
           width={20}
@@ -22,7 +22,7 @@ export function StrategyResponse() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[#ccff00]/30 bg-[#ccff00]/10">
-              <Icon
+              <AppIcon
                 icon="solar:shield-check-bold"
                 aria-hidden="true"
                 width={27}
@@ -36,7 +36,7 @@ export function StrategyResponse() {
                 Supply USDC on Aave v3
               </p>
               <p className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-[#A7A7B7]">
-                <Icon
+                <AppIcon
                   icon="cryptocurrency-color:eth"
                   aria-hidden="true"
                   width={16}
@@ -78,7 +78,7 @@ export function StrategyResponse() {
           className="inline-flex h-10 items-center gap-2 rounded-full bg-[#ccff00] px-4 text-sm font-black text-black transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-[#ccff00]/70"
         >
           View Strategy
-          <Icon icon="lucide:external-link" aria-hidden="true" width={16} height={16} />
+          <AppIcon icon="lucide:external-link" aria-hidden="true" width={16} height={16} />
         </Link>
         <IconAction
           icon="solar:bookmark-linear"

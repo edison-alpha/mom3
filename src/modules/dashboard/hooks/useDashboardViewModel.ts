@@ -32,6 +32,7 @@ export function useDashboardViewModel() {
   const balanceDisplay = formatCurrency(balanceValue, currency);
   const pnlDisplay = formatCurrency(Math.abs(pnlValue), currency);
   const isBalanceLoading = mounted && isUniversalAccountLoading;
+  const isInitialLoading = isUniversalAccountLoading && primaryAssets === null;
 
   function handleToggleBalance() {
     setBalanceHidden((value) => !value);
@@ -60,6 +61,7 @@ export function useDashboardViewModel() {
     currencyOpen,
     hasAssets,
     isBalanceLoading,
+    isInitialLoading,
     mounted,
     pnlDisplay,
     pnlValue,

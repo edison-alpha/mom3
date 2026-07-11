@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { ChevronDown } from "lucide-react";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
@@ -35,7 +35,7 @@ export function DashboardHeader({
         <div>
           <div className="flex items-center gap-2">
             <span className="text-base font-black">@ubayy</span>
-            <Icon
+            <AppIcon
               icon="material-symbols:verified-rounded"
               aria-hidden="true"
               width={20}
@@ -55,7 +55,7 @@ export function DashboardHeader({
           aria-expanded={currencyOpen}
           aria-haspopup="menu"
         >
-          <Icon
+          <AppIcon
             icon="ic:twotone-wallet"
             aria-hidden="true"
             width={20}
@@ -91,7 +91,7 @@ export function DashboardHeader({
               >
                 {code}
                 {currency === code ? (
-                  <Icon
+                  <AppIcon
                     icon="material-symbols:check-rounded"
                     width={17}
                     height={17}

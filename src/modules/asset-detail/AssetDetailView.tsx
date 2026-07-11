@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Link from "next/link";
 import * as React from "react";
 
@@ -20,7 +20,7 @@ export default function AssetDetailView({ asset }: { asset: AssetDetail }) {
         <section className="mt-4">
           <div className="flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.08]">
-              <Icon icon={asset.icon} className="h-8 w-8" aria-hidden="true" />
+              <AppIcon icon={asset.icon} className="h-8 w-8" aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
               <h2 className="truncate text-base font-black text-white">{asset.name}</h2>
@@ -74,7 +74,7 @@ export default function AssetDetailView({ asset }: { asset: AssetDetail }) {
         <section className="mt-3 rounded-[22px] border border-white/10 bg-[#111217] p-3.5">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3B33BD]/20 text-[#ccff00]">
-              <Icon icon="solar:shield-check-bold" aria-hidden="true" width={21} height={21} />
+              <AppIcon icon="solar:shield-check-bold" aria-hidden="true" width={21} height={21} />
             </span>
             <div>
               <h2 className="text-sm font-black text-white">Portfolio role</h2>

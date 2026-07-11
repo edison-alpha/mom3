@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
@@ -67,7 +67,7 @@ export function MobileHeader({
           className="absolute left-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
           aria-label={backLabel}
         >
-          <Icon
+          <AppIcon
             icon="lucide:chevron-left"
             aria-hidden="true"
             width={28}
@@ -113,7 +113,7 @@ export function MobilePageHeader({
           aria-label={backLabel}
           className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#1C1C1E] text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
         >
-          <Icon
+          <AppIcon
             icon="lucide:chevron-left"
             aria-hidden="true"
             width={24}

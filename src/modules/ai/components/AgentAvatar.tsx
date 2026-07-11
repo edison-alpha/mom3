@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 
 type AgentAvatarProps = {
   className?: string;
@@ -14,7 +14,7 @@ export function AgentAvatar({ className }: AgentAvatarProps) {
         .filter(Boolean)
         .join(" ")}
     >
-      <Icon
+      <AppIcon
         icon="solar:smile-circle-bold"
         aria-hidden="true"
         width={24}

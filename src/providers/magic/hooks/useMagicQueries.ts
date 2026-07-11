@@ -77,7 +77,7 @@ export function useLogoutMutation(magic: ReturnType<typeof useMagicInstanceQuery
     },
     onSuccess: () => {
       queryClient.setQueryData(magicQueryKeys.session, null);
-      void queryClient.invalidateQueries({ queryKey: universalAccountQueryKeys.root });
+      queryClient.removeQueries({ queryKey: universalAccountQueryKeys.root });
     },
   });
 }

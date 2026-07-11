@@ -91,9 +91,7 @@ export function useProfileViewModel() {
 
   const logout = async () => {
     await magicLogout();
-    window.location.assign(
-      process.env.NEXT_PUBLIC_LANDING_URL || "http://localhost:3001",
-    );
+    router.replace("/login");
   };
 
   const copyAddress = async (address: string, label: string) => {
@@ -109,9 +107,13 @@ export function useProfileViewModel() {
     copiedAddress,
     delegateErrorMessage: delegateMutation.error?.message || null,
     identityRows,
+    isAuthenticated: Boolean(session?.ownerAddress),
     isDelegated,
     isUpgradeDisabled:
-      !universalAccount || isDelegated || delegateMutation.isPending,
+      isMagicLoading ||
+      !universalAccount ||
+      isDelegated ||
+      delegateMutation.isPending,
     isUpgradePending: delegateMutation.isPending,
     logout,
     onUpgrade: () => delegateMutation.mutate(),

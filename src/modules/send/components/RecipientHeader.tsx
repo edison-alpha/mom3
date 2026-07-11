@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 
 import { WalletAvatar } from "@/components/ui/wallet-avatar";
@@ -21,7 +21,7 @@ export function RecipientHeader({ recipient }: { recipient: Recipient }) {
       <div className="mt-4 flex items-center justify-center gap-2">
         <h2 className="text-2xl font-black tracking-tight text-white">{recipient.handle}</h2>
         {recipient.status === "Verified" ? (
-          <Icon
+          <AppIcon
             icon="material-symbols:verified-rounded"
             aria-hidden="true"
             width={22}
@@ -31,7 +31,7 @@ export function RecipientHeader({ recipient }: { recipient: Recipient }) {
         ) : null}
       </div>
       <p className="mt-2 text-center text-sm font-medium text-[#9A9AA2]">
-        {recipient.name} â€¢ {truncateAddress(recipient.address, 5)}
+        {recipient.name} Ã¢â‚¬Â¢ {truncateAddress(recipient.address, 5)}
       </p>
     </div>
   );

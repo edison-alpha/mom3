@@ -1,11 +1,11 @@
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 
 import { BrandCard } from "@/components/ui/brand-card";
 
 export function ChatEmptyState() {
   return (
     <BrandCard className="p-4 text-center">
-      <Icon
+      <AppIcon
         icon="solar:chat-round-like-bold"
         aria-hidden="true"
         width={32}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -32,7 +32,7 @@ export default function OnboardingView() {
 
   useEffect(() => {
     if (session?.ownerAddress) {
-      router.replace("/claim-username");
+      router.replace("/dashboard");
     }
   }, [router, session?.ownerAddress]);
 
@@ -72,7 +72,7 @@ export default function OnboardingView() {
             disabled
             className="flex h-14 w-full items-center justify-center gap-3 rounded-[18px] bg-white text-base font-black text-black shadow-[0_16px_42px_-24px_rgba(14,18,58,0.7)] transition-transform active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-white"
           >
-            <Icon icon="simple-icons:apple" className="h-6 w-6" aria-hidden="true" />
+            <AppIcon icon="simple-icons:apple" className="h-6 w-6" aria-hidden="true" />
             Apple coming soon
           </button>
 
@@ -86,9 +86,9 @@ export default function OnboardingView() {
             className="flex h-14 w-full items-center justify-center gap-3 rounded-[18px] border border-white/12 bg-[#12111A] text-base font-black text-white shadow-[0_16px_42px_-24px_rgba(14,18,58,0.8)] transition-transform hover:bg-[#191824] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isLoading ? (
-              <Icon icon="lucide:loader-circle" className="h-5 w-5 animate-spin" aria-hidden="true" />
+              <AppIcon icon="lucide:loader-circle" className="h-5 w-5 animate-spin" aria-hidden="true" />
             ) : (
-              <Icon icon="flat-color-icons:google" className="h-6 w-6" aria-hidden="true" />
+              <AppIcon icon="flat-color-icons:google" className="h-6 w-6" aria-hidden="true" />
             )}
             {isLoading ? "Connecting wallet" : "Sign in with Google"}
           </button>

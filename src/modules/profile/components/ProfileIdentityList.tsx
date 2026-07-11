@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 
 import { profileSectionVariants } from "@/modules/profile/constants/profile.constants";
@@ -52,7 +52,7 @@ export function ProfileIdentityList({
                 }`}
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2A2A3E] text-white">
-                  <Icon icon={row.icon} aria-hidden="true" width={20} height={20} />
+                  <AppIcon icon={row.icon} aria-hidden="true" width={20} height={20} />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-bold text-white">

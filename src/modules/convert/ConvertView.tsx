@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 import { MobilePageHeader, MobileShell } from "@/components/ui/mobile-shell";
 import { cn } from "@/lib/utils";
@@ -73,11 +73,11 @@ function AssetButton({
       className="flex items-center gap-2 rounded-2xl bg-[#242620] px-3 py-2 text-white transition-colors hover:bg-[#2f2f2a] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
     >
       <span className={cn("flex h-7 w-7 items-center justify-center rounded-full", asset.color)}>
-        <Icon icon={asset.icon} aria-hidden="true" width={18} height={18} />
+        <AppIcon icon={asset.icon} aria-hidden="true" width={18} height={18} />
       </span>
       <span className="flex items-center gap-1 text-sm font-black">
         {asset.symbol}
-        <Icon icon="lucide:chevron-down" aria-hidden="true" width={14} height={14} />
+        <AppIcon icon="lucide:chevron-down" aria-hidden="true" width={14} height={14} />
       </span>
     </button>
   );
@@ -107,7 +107,7 @@ function AssetSelectModal({
             className="flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-[#9A9AA2] hover:text-white"
             aria-label="Close"
           >
-            <Icon icon="lucide:x" aria-hidden="true" width={20} height={20} />
+            <AppIcon icon="lucide:x" aria-hidden="true" width={20} height={20} />
           </button>
         </div>
         <div className="mt-3 overflow-hidden rounded-[24px] bg-black/25">
@@ -129,7 +129,7 @@ function AssetSelectModal({
                     asset.color
                   )}
                 >
-                  <Icon icon={asset.icon} aria-hidden="true" width={22} height={22} />
+                  <AppIcon icon={asset.icon} aria-hidden="true" width={22} height={22} />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-bold text-white">
@@ -228,7 +228,7 @@ export default function ConvertView() {
               className="flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#3B33BD] text-[#ccff00] shadow-[0_8px_18px_-10px_rgba(0,0,0,0.9)] transition-transform hover:rotate-180 focus-visible:ring-2 focus-visible:ring-[#ccff00]/70"
               aria-label="Switch assets"
             >
-              <Icon icon="lucide:arrow-up-down" aria-hidden="true" width={22} height={22} />
+              <AppIcon icon="lucide:arrow-up-down" aria-hidden="true" width={22} height={22} />
             </button>
           </div>
 
@@ -240,7 +240,7 @@ export default function ConvertView() {
                   {receiveAmount}
                 </p>
                 <p className="mt-1 text-xs font-semibold text-[#9A9AA2]">
-                  ≈ ${numericAmount ? numericAmount.toFixed(2) : "0.00"}
+                  â‰ˆ ${numericAmount ? numericAmount.toFixed(2) : "0.00"}
                 </p>
               </div>
               <AssetButton asset={receiveAsset} onClick={() => setSelecting("receive")} />
@@ -265,7 +265,7 @@ export default function ConvertView() {
             className="mx-auto flex h-12 w-12 items-center justify-center rounded-full text-white transition-colors hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
             aria-label="Delete"
           >
-            <Icon icon="lucide:delete" aria-hidden="true" width={24} height={24} />
+            <AppIcon icon="lucide:delete" aria-hidden="true" width={24} height={24} />
           </button>
         </section>
 

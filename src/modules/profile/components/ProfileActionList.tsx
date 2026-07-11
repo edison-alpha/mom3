@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -36,7 +36,7 @@ export function ProfileActionList({ rows }: ProfileActionListProps) {
             }`}
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3B33BD]/20 text-[#8F89FF]">
-              <Icon icon={row.icon} aria-hidden="true" width={20} height={20} />
+              <AppIcon icon={row.icon} aria-hidden="true" width={20} height={20} />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-bold text-white">
@@ -46,7 +46,7 @@ export function ProfileActionList({ rows }: ProfileActionListProps) {
                 {row.value}
               </span>
             </span>
-            <Icon
+            <AppIcon
               icon="lucide:chevron-right"
               aria-hidden="true"
               width={20}

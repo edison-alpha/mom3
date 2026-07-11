@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 
 import { profileSectionVariants } from "@/modules/profile/constants/profile.constants";
@@ -24,7 +24,7 @@ export function ProfileLogoutButton({ onLogout }: ProfileLogoutButtonProps) {
         onClick={onLogout}
         className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-[#1C1C1E] text-base font-bold text-white transition-colors hover:bg-[#262628] focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
       >
-        <Icon icon="lucide:log-out" aria-hidden="true" width={20} height={20} />
+        <AppIcon icon="lucide:log-out" aria-hidden="true" width={20} height={20} />
         Log out
       </button>
     </motion.section>

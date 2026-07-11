@@ -11,10 +11,11 @@ import { DashboardHeader } from "./components/DashboardHeader";
 import { EarnSection } from "./components/EarnSection";
 import { OpportunityGrid } from "./components/OpportunityGrid";
 import { StrategyModeCard } from "./components/StrategyModeCard";
+import { DashboardSkeleton } from "./components/DashboardSkeleton";
 import { useDashboardViewModel } from "./hooks/useDashboardViewModel";
 
 export default function DashboardView() {
-  const { session } = useMagic();
+  const { isLoading: isMagicLoading, session } = useMagic();
   const {
     activeMode,
     activeModeIndex,
@@ -25,6 +26,7 @@ export default function DashboardView() {
     currencyOpen,
     hasAssets,
     isBalanceLoading,
+    isInitialLoading,
     mounted,
     pnlDisplay,
     pnlValue,
@@ -33,6 +35,10 @@ export default function DashboardView() {
     handleToggleBalance,
     handleToggleCurrencyMenu,
   } = useDashboardViewModel();
+
+  if (isMagicLoading || isInitialLoading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <MobileShell bottomSlot={<FloatingMenuButton activeHref="/dashboard" />}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -61,7 +61,7 @@ export default function HistoryView() {
       aria-expanded={filterSheetOpen}
       aria-haspopup="dialog"
     >
-      <Icon icon="solar:global-bold" aria-hidden="true" width={21} height={21} />
+      <AppIcon icon="solar:global-bold" aria-hidden="true" width={21} height={21} />
     </button>
   );
 
@@ -92,7 +92,7 @@ export default function HistoryView() {
             <span className="truncate text-xs font-black">
               {selectedNetworkLabel}
             </span>
-            <Icon
+            <AppIcon
               icon="lucide:chevron-down"
               aria-hidden="true"
               width={14}
@@ -112,7 +112,7 @@ export default function HistoryView() {
             aria-expanded={filterSheetOpen}
             aria-haspopup="dialog"
           >
-            <Icon icon="lucide:sliders-horizontal" aria-hidden="true" width={15} height={15} />
+            <AppIcon icon="lucide:sliders-horizontal" aria-hidden="true" width={15} height={15} />
           </button>
         </motion.section>
 
@@ -161,7 +161,7 @@ export default function HistoryView() {
                             toneClassName[item.tone]
                           )}
                         >
-                          <Icon
+                          <AppIcon
                             icon={item.icon}
                             aria-hidden="true"
                             width={22}
@@ -187,7 +187,7 @@ export default function HistoryView() {
                               {item.time}
                             </span>
                           </span>
-                          <Icon
+                          <AppIcon
                             icon="lucide:chevron-right"
                             aria-hidden="true"
                             width={18}
@@ -206,7 +206,7 @@ export default function HistoryView() {
                   transition={{ duration: 0.3 }}
                   className="mt-4 flex min-h-48 flex-col items-center justify-center rounded-[28px] bg-[#1C1C1E] px-6 text-center"
                 >
-                  <Icon
+                  <AppIcon
                     icon="material-symbols:history-2"
                     aria-hidden="true"
                     width={36}
@@ -250,7 +250,7 @@ export default function HistoryView() {
                 )}
               >
                 <span className="min-w-0 flex items-center gap-3">
-                  <Icon
+                  <AppIcon
                     icon={network === "all" ? "solar:global-bold" : "lucide:network"}
                     aria-hidden="true"
                     width={19}
@@ -260,7 +260,7 @@ export default function HistoryView() {
                   <span className="truncate text-sm font-bold">{label}</span>
                 </span>
                 {isActive ? (
-                  <Icon
+                  <AppIcon
                     icon="material-symbols:check-rounded"
                     aria-hidden="true"
                     width={20}

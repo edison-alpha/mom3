@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { IconifyPreload } from "@/components/ui/iconify-preload";
 import { ServiceWorkerRegister } from "@/providers/service-worker/ServiceWorkerRegister";
 import { WalletProviders } from "@/providers/WalletProviders";
 
@@ -41,6 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-rounded antialiased">
+        <IconifyPreload />
         <WalletProviders>{children}</WalletProviders>
         <ServiceWorkerRegister />
       </body>

@@ -21,6 +21,8 @@ import { useProfileViewModel } from "@/modules/profile/hooks/useProfileViewModel
 export default function ProfileView() {
   const profile = useProfileViewModel();
 
+  if (!profile.isAuthenticated) return null;
+
   return (
     <MobileShell>
       <motion.div

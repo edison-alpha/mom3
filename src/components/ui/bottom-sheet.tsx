@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import { motion } from "framer-motion";
 import * as React from "react";
 
@@ -88,7 +88,7 @@ export function BottomSheet({
             aria-label={closeLabel}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black/30 text-white transition-colors hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
           >
-            <Icon icon="lucide:x" aria-hidden="true" width={18} height={18} />
+            <AppIcon icon="lucide:x" aria-hidden="true" width={18} height={18} />
           </button>
         </div>
 

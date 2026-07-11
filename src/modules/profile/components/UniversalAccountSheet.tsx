@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -57,13 +57,13 @@ export function UniversalAccountOwnerRow({
       aria-label="Open Universal Account details"
     >
       <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2A2A3E] text-white">
-        <Icon icon={icon} aria-hidden="true" width={20} height={20} />
+        <AppIcon icon={icon} aria-hidden="true" width={20} height={20} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-bold text-white">{label}</span>
         <span className="mt-0.5 block text-xs font-medium text-[#9A9AA2]">{value}</span>
       </span>
-      <Icon icon="lucide:chevron-right" aria-hidden="true" width={18} height={18} className="text-[#66666D]" />
+      <AppIcon icon="lucide:chevron-right" aria-hidden="true" width={18} height={18} className="text-[#66666D]" />
     </button>
   );
 }
@@ -104,7 +104,7 @@ export function ProfileUniversalAccountSheet({
           className="flex min-h-[62px] w-full items-center gap-3 rounded-2xl bg-black/25 px-3 py-2.5 text-left transition-colors hover:bg-white/[0.04] focus-visible:ring-2 focus-visible:ring-[#3B33BD] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#2A2A3E] text-[#8F89FF]">
-            <Icon icon={row.icon} aria-hidden="true" width={20} height={20} />
+            <AppIcon icon={row.icon} aria-hidden="true" width={20} height={20} />
           </span>
           <span className="min-w-0 flex-1">
             <span className="flex items-center justify-between gap-2">
@@ -117,7 +117,7 @@ export function ProfileUniversalAccountSheet({
               {row.description}
             </span>
           </span>
-          <Icon icon="lucide:copy" aria-hidden="true" width={16} height={16} className="shrink-0 text-[#66666D]" />
+          <AppIcon icon="lucide:copy" aria-hidden="true" width={16} height={16} className="shrink-0 text-[#66666D]" />
         </button>
       ))}
 

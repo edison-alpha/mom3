@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Link from "next/link";
 import * as React from "react";
 
@@ -21,7 +21,7 @@ export default function MarketDetailView({ market }: { market: MarketDetail }) {
         <section className="mt-4 rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_82%_4%,rgba(204,255,0,0.16),rgba(17,18,23,1)_42%)] p-3.5">
           <div className="flex items-start gap-3">
             <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${market.color}`}>
-              <Icon
+              <AppIcon
                 icon={market.icon}
                 aria-hidden="true"
                 width={28}

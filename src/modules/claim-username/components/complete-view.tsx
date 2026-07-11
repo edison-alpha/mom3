@@ -1,17 +1,22 @@
 'use client';
 
-import { Icon } from '@iconify/react';
+import { AppIcon } from "@/components/ui/app-icon";
+import { WalletAvatar } from "@/components/ui/wallet-avatar";
 import { motion } from 'framer-motion';
 import { ExternalLink, Share2 } from 'lucide-react';
 
 interface CompleteViewProps {
   handleValue: string;
+  ownerAddress?: string;
+  avatarFallback?: string;
   onViewProfile: () => void;
   onShare: () => void;
 }
 
 export default function CompleteView({
   handleValue,
+  ownerAddress,
+  avatarFallback,
   onViewProfile,
   onShare,
 }: CompleteViewProps) {
@@ -41,8 +46,14 @@ export default function CompleteView({
           transition={{ type: 'spring', stiffness: 200, damping: 15 }}
           className="relative mb-4"
         >
-          <div className="w-24 h-24 bg-gradient-to-br from-[#3B33BD] to-[#2E279A] rounded-full flex items-center justify-center relative">
-            <span className="text-5xl">👾</span>
+          <div className="relative flex h-24 w-24 items-center justify-center">
+            <WalletAvatar
+              address={ownerAddress}
+              fallback={avatarFallback}
+              label="Profile"
+              size="xl"
+              className="h-24 w-24"
+            />
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
@@ -71,7 +82,7 @@ export default function CompleteView({
             transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
             className="absolute -bottom-1 -right-1"
           >
-            <Icon
+            <AppIcon
               icon="material-symbols:verified-rounded"
               aria-hidden="true"
               width={32}

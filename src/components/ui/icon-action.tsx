@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 
 import { cn } from "@/lib/utils";
 
@@ -37,7 +37,7 @@ function IconAction({
       aria-label={label}
       {...props}
     >
-      <Icon
+      <AppIcon
         icon={icon}
         aria-hidden="true"
         width={iconSize}

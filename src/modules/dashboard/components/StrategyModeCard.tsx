@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 
 import { portfolioModes } from "../constants/dashboard";
 import type { PortfolioMode } from "../types/dashboard.types";
@@ -51,7 +51,7 @@ export function StrategyModeCard({
               {mode.icon === "degen-doge" ? (
                 <DegenDogeIcon className="h-4 w-4" />
               ) : (
-                <Icon icon={mode.icon} aria-hidden="true" width={14} height={14} />
+                <AppIcon icon={mode.icon} aria-hidden="true" width={14} height={14} />
               )}
               {mode.label}
             </motion.button>
@@ -69,7 +69,7 @@ export function StrategyModeCard({
             {activeMode.icon === "degen-doge" ? (
               <DegenDogeIcon className="h-7 w-7" />
             ) : (
-              <Icon icon={activeMode.icon} aria-hidden="true" width={19} height={19} />
+              <AppIcon icon={activeMode.icon} aria-hidden="true" width={19} height={19} />
             )}
           </span>
           <span className="min-w-0 flex-1">

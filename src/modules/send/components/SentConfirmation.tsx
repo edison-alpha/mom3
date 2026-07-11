@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 
 export function SentConfirmation({
@@ -24,7 +24,7 @@ export function SentConfirmation({
         className="inline-flex items-center gap-1 underline decoration-[#ccff00]/50 underline-offset-4 focus-visible:ring-2 focus-visible:ring-[#ccff00]"
       >
         View transaction
-        <Icon icon="lucide:external-link" aria-hidden="true" width={14} height={14} />
+        <AppIcon icon="lucide:external-link" aria-hidden="true" width={14} height={14} />
       </a>
     </div>
   );

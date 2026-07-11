@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Image from "next/image";
 import * as React from "react";
 
@@ -32,7 +32,7 @@ export function RecipientSearch({
         Search with tag or address
       </label>
       <div className="mt-5 flex h-12 items-center gap-3 rounded-2xl bg-[#1f1f21] px-4 transition-shadow focus-within:ring-2 focus-within:ring-[#3B33BD]">
-        <Icon icon="icon-park-outline:search" aria-hidden="true" width={20} height={20} className="shrink-0 text-[#9A9AA2]" />
+        <AppIcon icon="icon-park-outline:search" aria-hidden="true" width={20} height={20} className="shrink-0 text-[#9A9AA2]" />
         <input
           id="recipient-search"
           type="search"
@@ -57,7 +57,7 @@ export function RecipientSearch({
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[#3B33BD] transition-colors hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
           aria-label="Scan address"
         >
-          <Icon icon="lucide:scan-line" aria-hidden="true" width={23} height={23} />
+          <AppIcon icon="lucide:scan-line" aria-hidden="true" width={23} height={23} />
         </button>
       </div>
       {error ? (

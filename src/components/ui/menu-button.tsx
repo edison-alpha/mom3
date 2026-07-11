@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Link from "next/link";
 import * as React from "react";
 
@@ -146,7 +146,7 @@ const FloatingMenuButton = React.forwardRef<HTMLElement, FloatingMenuButtonProps
                 isActive && "bg-[#3B33BD] text-[#ccff00] hover:bg-[#3B33BD] hover:text-[#ccff00]"
               );
               const icon = (
-                <Icon
+                <AppIcon
                   icon={item.icon}
                   aria-hidden="true"
                   width={22}

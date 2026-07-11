@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import Link from "next/link";
 import * as React from "react";
 
@@ -37,9 +37,9 @@ export default function PositionDetailView({
         <section className="mt-4 rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_80%_0%,rgba(59,51,189,0.42),rgba(17,18,23,1)_46%)] p-3.5">
           <div className="flex items-start gap-3">
             <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/[0.08]">
-              <Icon icon={position.icon} className="h-8 w-8" aria-hidden="true" />
+              <AppIcon icon={position.icon} className="h-8 w-8" aria-hidden="true" />
               <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border border-[#111217] bg-black">
-                <Icon
+                <AppIcon
                   icon={position.protocolIcon}
                   className={cn("h-4 w-4", position.protocolTone)}
                   aria-hidden="true"

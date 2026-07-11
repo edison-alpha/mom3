@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 
 import type { RecommendationItem } from "../types/ai.types";
 
@@ -17,7 +17,7 @@ export function RecommendationCard({
     >
       <div className="flex gap-3">
         <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05]">
-          <Icon
+          <AppIcon
             icon={item.icon}
             aria-hidden="true"
             width={30}
@@ -30,7 +30,7 @@ export function RecommendationCard({
           <span className="flex items-start justify-between gap-3">
             <span>
               <span className="flex items-center gap-1.5 text-[15px] font-black leading-tight text-white">
-                <Icon
+                <AppIcon
                   icon="solar:stars-bold"
                   aria-hidden="true"
                   width={15}
@@ -54,7 +54,7 @@ export function RecommendationCard({
                 key={`${item.title}-${chip.label}`}
                 className="inline-flex h-7 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-2.5 text-xs font-bold text-white"
               >
-                <Icon icon={chip.icon} aria-hidden="true" width={16} height={16} />
+                <AppIcon icon={chip.icon} aria-hidden="true" width={16} height={16} />
                 {chip.label}
               </span>
             ))}
@@ -62,7 +62,7 @@ export function RecommendationCard({
         </span>
 
         <span className="flex items-center text-[#BDBDCC]">
-          <Icon
+          <AppIcon
             icon="lucide:chevron-right"
             aria-hidden="true"
             width={20}

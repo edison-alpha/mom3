@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { AppIcon } from "@/components/ui/app-icon";
 import * as React from "react";
 
 export function ScanModal({
@@ -32,7 +32,7 @@ export function ScanModal({
             className="flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-[#9A9AA2] transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-[#3B33BD]"
             aria-label="Close scanner"
           >
-            <Icon icon="lucide:x" aria-hidden="true" width={20} height={20} />
+            <AppIcon icon="lucide:x" aria-hidden="true" width={20} height={20} />
           </button>
         </div>
         <div className="mt-5 flex aspect-square items-center justify-center rounded-[28px] border border-[#3B33BD]/50 bg-black">
